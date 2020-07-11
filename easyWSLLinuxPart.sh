@@ -1,0 +1,1 @@
+pacman -Syu -y && pacman -S sudo -y && pacman -S vim -y && echo export EDITOR=/usr/bin/vim >> ~/.bashrc && pwconv && grpconv && chmod 0744 /etc/shadow && chmod 0744 /etc/gshadow && exit
