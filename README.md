@@ -1,5 +1,7 @@
 # easyWSL - have your own custom WSL distro easily
 
+![wsl -l -v](wsl%20-l%20-v.png)
+
 This is a tutorial how to easily have custom WSL distro, for example Arch Linux.
 Change distro and directories if you want.
 
