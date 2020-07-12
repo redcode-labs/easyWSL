@@ -14,9 +14,10 @@ Change distro and directories if you want.
 3. Run Powershell script. Click `Yes` and install Docker just by doing what an installator says.
    1. `&"C:\PATH\TO\CLONED\REPO\easyWSL\easyWSLPowershellPart.ps1"`
 4. If your Docker container boots up, run:
-   1. `cd && curl https://github.com/Unrooted/easyWSL/easyWSLLinuxPart.sh && ./easyWSLLinuxPart.sh`
+   1. `cd /mnt/c/PATH/TO/CLONED/REPO/easyWSL && ./easyWSLLinuxPart.sh`
 5. Docker container will exit itself. Let the Powershell finish the job.
 
 > You can also run first three steps commands in one line, but just to have a clarity in this README I decided to put them separatly. 
 
 If you want to run your freshly created WSL, just go to your Powershell and type `wsl -d wslarchlinux` and enjoy it!
+If you got bored with your new WSL, you can `wsl.exe - - unregister wslarchlinux`. 
