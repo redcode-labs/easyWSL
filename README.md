@@ -22,4 +22,4 @@ Change distro and directories if you want.
 > You can also run first three steps commands in one line, but just to have a clarity in this README I decided to put them separatly. 
 
 If you want to run your freshly created WSL, just go to your Powershell and type `wsl -d wslarchlinux` and enjoy it!
-If you got bored with your new WSL, you can `wsl.exe - - unregister wslarchlinux`. 
+If you got bored with your new WSL, you can `wsl.exe --unregister wslarchlinux`. 
