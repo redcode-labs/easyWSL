@@ -1,25 +1,21 @@
-# easyWSL - have your own custom WSL distro easily
+<h1 align="center"> easyWSL</h1> <br>
+<p align="center">
+  <a>
+    <img src="easyWSL.png" width="450">
+  </a>
+</p>
 
-![wsl -l -v](wsl%20-l%20-v.png)
+<p align="center">
+  Create custom WSL distros and manage them easily
+</p>
 
-This is a tutorial how to easily have custom WSL distro, for example Arch Linux.
-Change distro and directories if you want.
+## Instructions
 
-> I recommend using Windows Terminal, remember to use preview version of App Installer in order to use `winget` functionality.
-
-1. Change your ExecutionPolicy.
-   1. Open Powershell as an administrator.
-   2. `Set-ExecutionPolicy Unrestricted`
-2. Clone and go to the dir. of this repository.
+1. Clone and go to the dir. of this repository.
    1. `git clone https://github.com/Unrooted/easyWSL`
    2. `cd easyWSL`
-3. Run Powershell script. Click `Yes` and install Docker just by doing what an installator says.
-   1. `&"C:\PATH\TO\CLONED\REPO\easyWSL\easyWSLPowershellPart.ps1"`
-4. If your Docker container boots up, run:
-   1. `cd /mnt/c/PATH/TO/CLONED/REPO/easyWSL && ./easyWSLLinuxPart.sh`
-5. Docker container will exit itself. Let the Powershell finish the job.
-
-> You can also run first three steps commands in one line, but just to have a clarity in this README I decided to put them separatly. 
-
-If you want to run your freshly created WSL, just go to your Powershell and type `wsl -d wslarchlinux` and enjoy it!
-If you got bored with your new WSL, you can `wsl.exe --unregister wslarchlinux`. 
+2. Change the post-installation script already. Use commands dependent on the container of your choice.
+3. Run Powershell script as an administrator.
+4. Click `Yes` and install Docker, continuing with the installation instructions from the .exe
+5. Your system needs to be rebooted. After a reboot, the script will continue to run.
+6. After the script is done, everything is done! Feel free and enjoy your Docker-container-based WSL distro!
