@@ -1,0 +1,12 @@
+﻿{
+  "sources": {
+    "arch": {
+      "name": "Arch Linux",
+      "source": "https://gitlab.archlinux.org/archlinux/archlinux-docker/-/package_files/259/download"
+    },
+    "ubuntu": {
+      "name": "Ubuntu",
+      "source": "https://gitlab.archlinux.org/archlinux/archlinux-docker/-/package_files/259/download"
+    }
+  }
+}
