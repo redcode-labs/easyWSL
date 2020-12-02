@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>IronPython.Wpf</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Internal.Scripting.Runtime.DynamicXamlReader">
+            <summary>
+            Provides services for loading XAML and binding events to dynamic language code definitions.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Internal.Scripting.Runtime.DynamicXamlReader.LoadComponent(System.Object,Microsoft.Scripting.Runtime.DynamicOperations,System.IO.Stream,System.Xaml.XamlSchemaContext)">
+            <summary>
+            Loads XAML from the specified stream and returns the deserialized object.  Any event handlers
+            are bound to methods defined in the provided Scope and converted using the provided DynamicOperations
+            object.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Internal.Scripting.Runtime.DynamicXamlReader.LoadComponent(System.Object,Microsoft.Scripting.Runtime.DynamicOperations,System.String,System.Xaml.XamlSchemaContext)">
+            <summary>
+            Loads XAML from the specified filename and returns the deserialized object.  Any event handlers
+            are bound to methods defined in the provided Scope and converted using the provided DynamicOperations
+            object.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Internal.Scripting.Runtime.DynamicXamlReader.LoadComponent(System.Object,Microsoft.Scripting.Runtime.DynamicOperations,System.Xml.XmlReader,System.Xaml.XamlSchemaContext)">
+            <summary>
+            Loads XAML from the specified XmlReader and returns the deserialized object.  Any event handlers
+            are bound to methods defined in the provided Scope and converted using the provided DynamicOperations
+            object.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Internal.Scripting.Runtime.DynamicXamlReader.LoadComponent(System.Object,Microsoft.Scripting.Runtime.DynamicOperations,System.IO.TextReader,System.Xaml.XamlSchemaContext)">
+            <summary>
+            Loads XAML from the specified TextReader and returns the deserialized object.  Any event handlers
+            are bound to methods defined in the provided Scope and converted using the provided DynamicOperations
+            object.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Internal.Scripting.Runtime.DynamicXamlReader.LoadComponent(System.Object,Microsoft.Scripting.Runtime.DynamicOperations,System.Xaml.XamlXmlReader)">
+            <summary>
+            Loads XAML from the specified XamlXmlReader and returns the deserialized object.  Any event handlers
+            are bound to methods defined in the provided Scope and converted using the provided DynamicOperations
+            object.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Internal.Scripting.Runtime.DynamicXamlReader.DynamicWriter.Names">
+            <summary>
+            Returns the list of x:Name'd objects that we saw and should set on the root object.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Internal.Scripting.Runtime.DynamicXamlReader.DynamicWriter.Adder(System.Object,System.Object)">
+            <summary>
+            Dummy, should never be called
+            </summary>
+        </member>
+        <member name="T:IronPython.Modules.Wpf">
+            <summary>
+            Provides helpers for interacting with Windows Presentation Foundation applications.
+            </summary>
+        </member>
+        <member name="M:IronPython.Modules.Wpf.LoadComponent(IronPython.Runtime.CodeContext,System.Object,System.String)">
+            <summary>
+            Loads XAML from the specified XmlReader and returns the deserialized object.  Any event handlers
+            are bound to methods defined in the provided module.  Any named objects are assigned to the object.
+            
+            The provided object is expected to be the same type as the root of the XAML element.
+            </summary>
+        </member>
+        <member name="M:IronPython.Modules.Wpf.LoadComponent(IronPython.Runtime.CodeContext,System.Object,System.IO.Stream)">
+            <summary>
+            Loads XAML from the specified XmlReader and returns the deserialized object.  Any event handlers
+            are bound to methods defined in the provided module.  Any named objects are assigned to the object.
+            
+            The provided object is expected to be the same type as the root of the XAML element.
+            </summary>
+        </member>
+        <member name="M:IronPython.Modules.Wpf.LoadComponent(IronPython.Runtime.CodeContext,System.Object,System.Xml.XmlReader)">
+            <summary>
+            Loads XAML from the specified XmlReader and returns the deserialized object.  Any event handlers
+            are bound to methods defined in the provided module.  Any named objects are assigned to the object.
+            
+            The provided object is expected to be the same type as the root of the XAML element.
+            </summary>
+        </member>
+        <member name="M:IronPython.Modules.Wpf.LoadComponent(IronPython.Runtime.CodeContext,System.Object,System.IO.TextReader)">
+            <summary>
+            Loads XAML from the specified XmlReader and returns the deserialized object.  Any event handlers
+            are bound to methods defined in the provided module.  Any named objects are assigned to the object.
+            
+            The provided object is expected to be the same type as the root of the XAML element.
+            </summary>
+        </member>
+        <member name="M:IronPython.Modules.Wpf.LoadComponent(IronPython.Runtime.CodeContext,System.Object,System.Xaml.XamlXmlReader)">
+            <summary>
+            Loads XAML from the specified XmlReader and returns the deserialized object.  Any event handlers
+            are bound to methods defined in the provided module.  Any named objects are assigned to the object.
+            
+            The provided object is expected to be the same type as the root of the XAML element.
+            </summary>
+        </member>
+    </members>
+</doc>

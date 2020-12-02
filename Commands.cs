@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
-using ICSharpCode.SharpZipLib.Tar;
-
-
+using IronPython.Hosting;
 
 namespace easyWSL
 {
@@ -30,8 +28,8 @@ namespace easyWSL
             WebClient client = new WebClient();
             Uri uri = new Uri(address);
 
-            client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressCallback);
-            client.DownloadFile(address, "install.tar.gz");
+            
+            client.DownloadFileAsync(uri, "install.tar.gz");
         }
 
         private static void DownloadProgressCallback(object sender, DownloadProgressChangedEventArgs e)
@@ -43,7 +41,6 @@ namespace easyWSL
                 e.TotalBytesToReceive,
                 e.ProgressPercentage);
         }
-
 
 
 
@@ -113,8 +110,20 @@ namespace easyWSL
             Directory.CreateDirectory(customDistroPath);
             //Directory.CreateDirectory(easyWSLHome+ "\\Sources\\"+ choosenDistro);
 
-            Console.WriteLine("Downloading distro image ...");
-            DownLoadFile(choosenDistroSource);
+            /*Console.WriteLine("Downloading distro image ...");
+            
+            using (var progress = new ProgressBar())
+            {
+                DownLoadFile(choosenDistroSource);
+                for (int i = 0; i <= 100; i++)
+                {
+                    progress.Report((double)i / 100);
+                    Thread.Sleep(20);
+                }
+            }
+            Console.WriteLine("Done.");*/
+
+            DockerPull.PullImage("ubuntu:latest");
 
             Console.WriteLine("Copying image ...");
             File.Copy("install.tar.gz", customDistroPath + "\\install.tar.gz", true);
@@ -135,7 +144,7 @@ namespace easyWSL
 
         public static void Help(string[] args)
         {
-            Console.WriteLine("There is none :( You have to figure out everything by yourself.");
+            Console.WriteLine("dupa");
         }
 
 

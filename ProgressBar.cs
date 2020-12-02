@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading;
 
-namespace easyWSL
+namespace easyWSL	
 {
 	public class ProgressBar : IDisposable, IProgress<double>
 	{
