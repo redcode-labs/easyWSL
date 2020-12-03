@@ -17,7 +17,7 @@ namespace easyWSL
 
         public class DistrosProperties
         {
-            public string Name { get; set; }
+            public string Distro { get; set; }
             public string Path { get; set; }
         }
     }

@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
-using IronPython.Hosting;
 
 namespace easyWSL
 {
@@ -125,20 +124,24 @@ namespace easyWSL
 
             DockerPull.PullImage("ubuntu:latest");
 
-            Console.WriteLine("Copying image ...");
+            /*Console.WriteLine("Copying image ...");
             File.Copy("install.tar.gz", customDistroPath + "\\install.tar.gz", true);
             File.Delete("install.tar.gz");
 
             Console.WriteLine("Registering new WSL distro ...");
-            Process.Start("wsl.exe", "--import" + " " + customDistroName + " " + customDistroPath + " " + customDistroPath + "\\install.tar.gz");
+            Process.Start("wsl.exe", "--import" + " " + customDistroName + " " + customDistroPath + " " + customDistroPath + "\\install.tar.gz");*/
 
-            // chuj z tym, nie wiem jak dodać zainstalowane distro do słownika installedDistros
-            //appSettings.installedDistros.Add("txt", ["notepad.exe", "fsdfsdsd"]);
-            //SyncJSON();
+
+
+
+            // adding freshly created distro to the appSettings.json
+            appSettings.installedDistros.Add(customDistroName, new AppSettings.DistrosProperties { Distro = choosenDistroName, Path = customDistroPath });
+            
+            SyncJSON();
 
         }
         public static void Exit(string[] obj)
-        {
+        {   
             System.Environment.Exit(1);
         }
 

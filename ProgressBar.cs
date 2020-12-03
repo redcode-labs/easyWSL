@@ -17,6 +17,8 @@ namespace easyWSL
 		private bool disposed = false;
 		private int animationIndex = 0;
 
+		
+
 		public ProgressBar()
 		{
 			timer = new Timer(TimerHandler);
