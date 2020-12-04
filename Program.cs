@@ -1,5 +1,4 @@
 ﻿using System;
-
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +15,11 @@ namespace easyWSL
 {
     class Program
     {
-        public static string easyWSLHome = Environment.GetEnvironmentVariable("HOMEPATH") + "\\easyWSL";
+        public string easyWSLHome = Environment.GetEnvironmentVariable("HOMEPATH") + "\\easyWSL";
         static void Main(string[] args)
         {
+            Program main = new Program();
+
             // serializing settings
             dynamic appSettings = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText("appSettings.json"), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
@@ -31,8 +32,10 @@ namespace easyWSL
 
             // creating necessary directories
             
-            Directory.CreateDirectory(easyWSLHome);
-            Directory.CreateDirectory(easyWSLHome+"\\Sources");
+            Directory.CreateDirectory(main.easyWSLHome);
+            Directory.CreateDirectory(main.easyWSLHome+"\\Sources");
+            
+
 
             // if the easyWSL app is started for the first time on this machine proceed the initial setup
             if (appSettings.IsFirstRun == true)
@@ -50,6 +53,7 @@ namespace easyWSL
         }
         public static void FirstRun()
         {
+            Program main = new Program();
             dynamic appSettings = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText("appSettings.json"), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             Console.WriteLine("Welcome to");
             Console.WriteLine(" ");
@@ -62,12 +66,12 @@ namespace easyWSL
             Console.WriteLine("                 /____/                      ");
             Console.WriteLine(" ");
             Console.ResetColor();
-            Console.Write("Type the path where you want to store all your custom distros (default is "+easyWSLHome + "\\Distros" +"): ");
+            Console.Write("Type the path where you want to store all your custom distros (default is "+main.easyWSLHome + "\\Distros" +"): ");
             string distrosDirectory = Console.ReadLine();
             if(distrosDirectory=="")
             {
-                Directory.CreateDirectory(easyWSLHome+"\\Distros");
-                distrosDirectory = easyWSLHome + "\\Distros";
+                Directory.CreateDirectory(main.easyWSLHome+"\\Distros");
+                distrosDirectory = main.easyWSLHome + "\\Distros";
                 appSettings.DistrosPath = distrosDirectory;
                 string json = JsonSerializer.Serialize(appSettings);
                 File.WriteAllText("appSettings.json", json);

@@ -27,6 +27,8 @@ namespace easyWSL
         public static void PullImage(string image)
         {
             Random random = new Random();
+            Program main = new Program();
+
             string RandomString(int length)
             {
                 const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -134,10 +136,10 @@ namespace easyWSL
             {
                 tokenFromResponse = JsonSerializer.Deserialize<TokenFromResponse>(GetRequest($"{auth_url}?service={reg_service}&scope=repository:{repository}:pull"));
 
-                string layerName = layer.Remove(0, 7) + ".tar";
+                string layerName = layer.Remove(0, 7) + ".gzip";
                 Console.WriteLine(layerName);
                 
-                GetRequestWithHeaderToFile($"https://{registry}/v2/{repository}/blobs/{layer}", tokenFromResponse.token, "application/vnd.docker.distribution.manifest.v2+json", layerName);
+                GetRequestWithHeaderToFile($"https://{registry}/v2/{repository}/blobs/{layer}", tokenFromResponse.token, "application/vnd.docker.distribution.manifest.v2+json", main.easyWSLHome + "\\Sources\\"+ layerName);
 
             }
 

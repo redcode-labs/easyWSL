@@ -39,6 +39,7 @@ namespace easyWSL
            {
                 { "install", Commands.Install },
                 { "help", Commands.Help },
+                { "list", Commands.ShowInstalledDistros },
                 { "exit" , Commands.Exit }
            };
     }

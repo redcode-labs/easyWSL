@@ -140,6 +140,18 @@ namespace easyWSL
             SyncJSON();
 
         }
+
+        public static void ShowInstalledDistros(string[] obj)
+        {
+            dynamic appSettings = JsonSerializer.Deserialize<AppSettings>(File.ReadAllText("appSettings.json"), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            int index = 1;
+            foreach (KeyValuePair<string, AppSettings.DistrosProperties> distro in appSettings)
+            {
+                index++;
+                Console.WriteLine($"{index}. {appSettings.installedDistros[distro].Distro}");
+            }
+        }
+
         public static void Exit(string[] obj)
         {   
             System.Environment.Exit(1);
