@@ -6,16 +6,22 @@
 </p>
 
 <p align="center">
-  Create custom WSL distros and manage them easily
+  Create WSL distros based on Docker Images.
 </p>
 
-## Instructions
+> Made with ❤ by @wrobeljakub and @redcode-labs team.
 
-1. Clone and go to the dir. of this repository.
-   1. `git clone https://github.com/Unrooted/easyWSL`
-   2. `cd easyWSL`
-2. Change the post-installation script already. Use commands dependent on the container of your choice.
-3. Run Powershell script as an administrator.
-4. Click `Yes` and install Docker, continuing with the installation instructions from the .exe
-5. Your system needs to be rebooted. After a reboot, the script will continue to run.
-6. After the script is done, everything is done! Feel free and enjoy your Docker-container-based WSL distro!
+## What does this project do?
+
+There's a script inside which downloads a .tar or .tar.gz image from Docker Hub. In fact, it can be more than just one .tar/.tar.gz, that's why bsdtar.exe is included in this repo, because it is responsible for 'merging' all .tar/.tar.gz files together. Then, one big .tar/.tar.gz is created (if it's needed, we don't have to do this thing if the image contains just one layer) and can be easily exported as a WSL distro.
+
+## How to use it?
+
+Just go to our release page, download latest release and just run it. Done!
+
+## Command List
+
+`--help` / `-h` -> list all available commands
+`--name` / `-n` -> name for your distro
+`--distro` / `-d` -> id of the distro in the sources.json file
+`--path` / `-p` -> path where you want to place your .vhd (it's basically how WSL distros work, they're .tar/.tar.gz files turned into .vhd with Linux filesystems)
