@@ -8,12 +8,13 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace easyWSL
 {
     class DistroInstaller
     {
-        public class TokenFromResponse
+        public class autorizationResponse
         {
             public string token { get; set; }
             public string access_token { get; set; }
@@ -54,6 +55,20 @@ namespace easyWSL
                 return responseStream;
             }
 
+            string GetRequestWithHeader(string url, string token, string type)
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Headers.Add("Authorization", "Bearer " + token);
+                request.Accept = type;
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream receiveStream = response.GetResponseStream();
+                StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                string responseStream = readStream.ReadToEnd();
+                response.Close();
+                readStream.Close();
+                return responseStream;
+            }
+
             void GetRequestWithHeaderToFile(string url, string token, string type, string fileName)
             {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -65,11 +80,11 @@ namespace easyWSL
                 byte[] buffer = new byte[bufferSize];
 
                 FileStream fileStream = File.Create(fileName);
-                while((bytesRead = receiveStream.Read(buffer, 0, bufferSize)) != 0)
+                while ((bytesRead = receiveStream.Read(buffer, 0, bufferSize)) != 0)
                 {
                     fileStream.Write(buffer, 0, bytesRead);
                 }
-                
+
                 response.Close();
                 fileStream.Close();
             }
@@ -77,6 +92,7 @@ namespace easyWSL
 
             SortedDictionary<string, Sources> sources = JsonSerializer.Deserialize<SortedDictionary<string, Sources>>(File.ReadAllText("sources.json"), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
             string repository = "", tag = "", registry = "registry-1.docker.io", authorizationUrl = "https://auth.docker.io/token", registryUrl = "registry.docker.io";
+
 
             if (sources[distroID].Image.Contains('/'))
             {
@@ -93,8 +109,23 @@ namespace easyWSL
                 repository = $"library/{imgage}";
             }
 
+            dynamic autorizationResponse = JsonSerializer.Deserialize<autorizationResponse>(GetRequest($"{authorizationUrl}?service={registryUrl}&scope=repository:{repository}:pull"));
 
-            dynamic tokenFromResponse = JsonSerializer.Deserialize<TokenFromResponse>(GetRequest($"{authorizationUrl}?service={registryUrl}&scope=repository:{repository}:pull"));
+            string layersResponse = GetRequestWithHeader($"https://{registry}/v2/{repository}/manifests/{tag}", autorizationResponse.token, "application/vnd.docker.distribution.manifest.v2+json");
+
+
+            Console.WriteLine(layersResponse);
+
+            MatchCollection layersRegex = Regex.Matches(layersResponse, @"sha256:\w{64}");
+            var layersList = layersRegex.Cast<Match>().Select(match => match.Value).ToList();
+            layersList.RemoveAt(0);
+
+            foreach (string layer in layersList)
+            {
+                Console.WriteLine(layer);
+            }
+
+
 
             string layersDirectory = $"{easyWSLDataDirectory}\\layers";
             Directory.CreateDirectory(layersDirectory);
@@ -102,23 +133,23 @@ namespace easyWSL
             string concatTarCommand = $" cf {layersDirectory}\\install.tar";
 
             int count = 0;
-            foreach (string layer in sources[distroID].Layers)
+            foreach (string layer in layersList)
             {
                 count++;
                 Console.WriteLine($"Downloading {count}. layer ...");
 
-                tokenFromResponse = JsonSerializer.Deserialize<TokenFromResponse>(GetRequest($"{authorizationUrl}?service={registryUrl}&scope=repository:{repository}:pull"));
+                autorizationResponse = JsonSerializer.Deserialize<autorizationResponse>(GetRequest($"{authorizationUrl}?service={registryUrl}&scope=repository:{repository}:pull"));
 
                 string layerName = $"layer{count}.tar.bz";
                 string layerPath = $"{layersDirectory}\\{layerName}";
 
-                GetRequestWithHeaderToFile($"https://{registry}/v2/{repository}/blobs/{layer}", tokenFromResponse.token, "application/vnd.docker.distribution.manifest.v2+json", layerPath);
+                GetRequestWithHeaderToFile($"https://{registry}/v2/{repository}/blobs/{layer}", autorizationResponse.token, "application/vnd.docker.distribution.manifest.v2+json", layerPath);
                 concatTarCommand += $" @{layerPath} ";
             }
 
 
             Console.WriteLine("Creating install.tar file ...");
-            if(sources[distroID].Layers.Count == 1)
+            if (sources[distroID].Layers.Count == 1)
             {
                 File.Move($"{layersDirectory}\\layer1.tar.bz", $"{layersDirectory}\\install.tar.bz");
 
@@ -132,7 +163,7 @@ namespace easyWSL
                 Console.WriteLine("Registering the distro ...");
                 StartProcessSilently("wsl.exe", $"--import {distroName} {distroPath} {easyWSLDataDirectory}\\layers\\install.tar");
             }
-            
+
 
             Console.WriteLine("Cleaning up ...");
             Directory.Delete(layersDirectory, true);
