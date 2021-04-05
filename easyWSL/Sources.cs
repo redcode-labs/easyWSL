@@ -8,8 +8,12 @@ namespace easyWSL
 {
     class Sources
     {
-        public string Name { get; set; }
-        public string Image { get; set; }
-        public List<string> Layers { get; set; }
+        public List<SourceProperties> sources { get; set; }
+    }
+
+    public class SourceProperties
+    { 
+        public string image { get; set; }
+        public string name { get; set; }
     }
 }

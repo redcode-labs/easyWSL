@@ -26,7 +26,7 @@ namespace easyWSL
         }
 
 
-        public static void InstallDistro(string distroID, string distroName, string distroPath, string easyWSLDataDirectory, string easyWSLDirectory)
+        public static void InstallDistro(string distroImage, string distroName, string distroPath, string easyWSLDataDirectory, string easyWSLDirectory)
         {
 
             void StartProcessSilently(string processName, string processArguments)
@@ -90,20 +90,20 @@ namespace easyWSL
             }
 
 
-            SortedDictionary<string, Sources> sources = JsonSerializer.Deserialize<SortedDictionary<string, Sources>>(File.ReadAllText("sources.json"), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            dynamic sources = JsonSerializer.Deserialize<Sources>(File.ReadAllText("sources.json"));
             string repository = "", tag = "", registry = "registry-1.docker.io", authorizationUrl = "https://auth.docker.io/token", registryUrl = "registry.docker.io";
 
 
-            if (sources[distroID].Image.Contains('/'))
+            if (distroImage.Contains('/'))
             {
-                string[] imageArray = sources[distroID].Image.Split('/');
+                string[] imageArray = distroImage.Split('/');
                 tag = "latest";
-                repository = sources[distroID].Image;
+                repository = distroImage;
             }
 
             else
             {
-                string[] imageArray = sources[distroID].Image.Split(':');
+                string[] imageArray = distroImage.Split(':');
                 string imgage = imageArray[0];
                 tag = imageArray[1];
                 repository = $"library/{imgage}";
@@ -124,7 +124,6 @@ namespace easyWSL
             {
                 Console.WriteLine(layer);
             }
-
 
 
             string layersDirectory = $"{easyWSLDataDirectory}\\layers";
@@ -149,7 +148,7 @@ namespace easyWSL
 
 
             Console.WriteLine("Creating install.tar file ...");
-            if (sources[distroID].Layers.Count == 1)
+            if (layersList.Count == 1)
             {
                 File.Move($"{layersDirectory}\\layer1.tar.bz", $"{layersDirectory}\\install.tar.bz");
 

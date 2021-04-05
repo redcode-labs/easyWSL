@@ -15,6 +15,8 @@ namespace easyWSL
 {
     class Program
     {
+
+
         static void Main(string[] args)
         {
             if(args.Length == 0)
@@ -30,10 +32,10 @@ namespace easyWSL
                 Console.ResetColor();
             }
 
-            SortedDictionary<string, Sources> sources = JsonSerializer.Deserialize<SortedDictionary<string, Sources>>(File.ReadAllText("sources.json"), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            
-            string distroID = "", distroName = "", distroPath = "";
-            int distroNumber;
+            dynamic sources = JsonSerializer.Deserialize<Sources>(File.ReadAllText("sources.json"));
+        
+            string distroImage = "", distroName = "", distroPath = "";
+            int distroNumber = 0;
 
             bool isConversionSuccessful;
 
@@ -47,9 +49,9 @@ namespace easyWSL
             {
                 foreach (int argument in Enumerable.Range(0, args.Length))
                 {
-                    if ((args[argument] == "-d") ^ (args[argument] == "--distro"))
+                    if ((args[argument] == "-i") ^ (args[argument] == "--image"))
                     {
-                        distroID = args[argument + 1];
+                        distroImage = args[argument + 1];
                     }
 
                     else if ((args[argument] == "-n") ^ (args[argument] == "--name"))
@@ -59,47 +61,52 @@ namespace easyWSL
 
                     else if ((args[argument] == "-p") ^ (args[argument] == "--path"))
                     {
-                        distroID = args[argument + 1];
+                        distroPath = args[argument + 1];
                     }
                 }
             }
 
-            if (distroID == "")
+            if (distroImage == "")
             {
                 int count = 1;
-                foreach (KeyValuePair<string, Sources> kvp in sources)
+                foreach (var source in sources.sources)
                 {
-                    Console.WriteLine($"{count}. {sources[kvp.Key].Name}");
+                    Console.WriteLine($"{count}. {source.name}");
                     count++;
                 }
+
+                // additional entry for a custom image option
+                Console.WriteLine($"{count}. Specify a docker image");
 
                 do
                 {
                     Console.Write("A number of a distro you want to install: ");
                     
                     isConversionSuccessful = Int32.TryParse(Console.ReadLine(), out distroNumber);
-                } while ((distroNumber > sources.Count) ^ (isConversionSuccessful == false));
-                
+                } while ((distroNumber > count) ^ (isConversionSuccessful == false));
+
+                if(distroNumber == count)
+                {
+                    Console.Write("Specify a docker container: ");
+                    distroImage = Console.ReadLine();
+                }
+                else
+                {
+                    distroImage = sources.sources[distroNumber - 1].image;
+                }
                 
 
-                count = 1;
-                foreach (KeyValuePair<string, Sources> kvp in sources)
-                {
-                    distroID = kvp.Key;
-                    count++;
-                    if (count > distroNumber)
-                        break;
-                }
+                Console.WriteLine(distroImage);
             }
-           
+            
             if(distroName == "")
             {
-                Console.Write("A name for your distro (default " + sources[distroID].Name + "): ");
+                Console.Write("A name for your distro (default " + sources.sources[distroNumber-1].name + "): ");
                 distroName = Console.ReadLine();
 
                 if (distroName == "")
                 {
-                    distroName = sources[distroID].Name;
+                    distroName = sources.sources[distroNumber-1].name;
                 }
 
                 distroName = Regex.Replace(distroName, @"\s+", "");
@@ -124,7 +131,7 @@ namespace easyWSL
 
             Directory.CreateDirectory(distroPath);
 
-            DistroInstaller.InstallDistro(distroID, distroName, distroPath, easyWSLDataDirectory, easyWSLDirectory);
+            DistroInstaller.InstallDistro(distroImage, distroName, distroPath, easyWSLDataDirectory, easyWSLDirectory);
         }
     }
 }
