@@ -145,7 +145,7 @@ namespace easyWSL
                 GetRequestWithHeaderToFile($"https://{registry}/v2/{repository}/blobs/{layer}", autorizationResponse.token, "application/vnd.docker.distribution.manifest.v2+json", layerPath);
                 concatTarCommand += $" @{layerPath} ";
             }
-
+            
 
             Console.WriteLine("Creating install.tar file ...");
             if (layersList.Count == 1)

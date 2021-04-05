@@ -83,9 +83,9 @@ namespace easyWSL
                     Console.Write("A number of a distro you want to install: ");
                     
                     isConversionSuccessful = Int32.TryParse(Console.ReadLine(), out distroNumber);
-                } while ((distroNumber > count) ^ (isConversionSuccessful == false));
+                } while ((distroNumber > sources.sources.Count + 1) ^ (isConversionSuccessful == false));
 
-                if(distroNumber == count)
+                if(distroNumber == sources.sources.Count+1)
                 {
                     Console.Write("Specify a docker container: ");
                     distroImage = Console.ReadLine();
@@ -97,16 +97,29 @@ namespace easyWSL
                 
 
                 Console.WriteLine(distroImage);
+
             }
             
             if(distroName == "")
             {
-                Console.Write("A name for your distro (default " + sources.sources[distroNumber-1].name + "): ");
+                if (distroNumber == sources.sources.Count + 1)
+                    Console.Write("A name for your distro: ");
+                else
+                    Console.Write("A name for your distro (default " + sources.sources[distroNumber - 1].name + "): ");
                 distroName = Console.ReadLine();
 
                 if (distroName == "")
                 {
-                    distroName = sources.sources[distroNumber-1].name;
+                    if (distroNumber == sources.sources.Count + 1)
+                    {
+                        while(distroName == "")
+                        {
+                            Console.Write("A name for your distro: ");
+                            distroName = Console.ReadLine();
+                        }
+                    }
+                    else
+                        distroName = sources.sources[distroNumber-1].name;
                 }
 
                 distroName = Regex.Replace(distroName, @"\s+", "");
