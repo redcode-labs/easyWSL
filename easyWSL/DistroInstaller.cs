@@ -129,7 +129,7 @@ namespace easyWSL
             string layersDirectory = $"{easyWSLDataDirectory}\\layers";
             Directory.CreateDirectory(layersDirectory);
 
-            string concatTarCommand = $" cf {layersDirectory}\\install.tar";
+            string concatTarCommand = $" cf {layersDirectory}\\{distroName}-install.tar";
 
             int count = 0;
             foreach (string layer in layersList)
@@ -139,7 +139,7 @@ namespace easyWSL
 
                 autorizationResponse = JsonSerializer.Deserialize<autorizationResponse>(GetRequest($"{authorizationUrl}?service={registryUrl}&scope=repository:{repository}:pull"));
 
-                string layerName = $"layer{count}.tar.bz";
+                string layerName = $"{distroName}-layer{count}.tar.bz";
                 string layerPath = $"{layersDirectory}\\{layerName}";
 
                 GetRequestWithHeaderToFile($"https://{registry}/v2/{repository}/blobs/{layer}", autorizationResponse.token, "application/vnd.docker.distribution.manifest.v2+json", layerPath);
@@ -150,17 +150,17 @@ namespace easyWSL
             Console.WriteLine("Creating install.tar file ...");
             if (layersList.Count == 1)
             {
-                File.Move($"{layersDirectory}\\layer1.tar.bz", $"{layersDirectory}\\install.tar.bz");
+                File.Move($"{layersDirectory}\\{distroName}-layer1.tar.bz", $"{layersDirectory}\\{distroName}-install.tar.bz");
 
                 Console.WriteLine("Registering the distro ...");
-                StartProcessSilently("wsl.exe", $"--import {distroName} {distroPath} {easyWSLDataDirectory}\\layers\\install.tar.bz");
+                StartProcessSilently("wsl.exe", $"--import {distroName} {distroPath} {easyWSLDataDirectory}\\layers\\{distroName}-install.tar.bz");
             }
             else
             {
                 StartProcessSilently($"{easyWSLDirectory}\\dep\\bsdtar.exe", concatTarCommand);
 
                 Console.WriteLine("Registering the distro ...");
-                StartProcessSilently("wsl.exe", $"--import {distroName} {distroPath} {easyWSLDataDirectory}\\layers\\install.tar");
+                StartProcessSilently("wsl.exe", $"--import {distroName} {distroPath} {easyWSLDataDirectory}\\layers\\{distroName}-install.tar");
             }
 
 

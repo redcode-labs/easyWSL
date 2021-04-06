@@ -15,8 +15,6 @@ namespace easyWSL
 {
     class Program
     {
-
-
         static void Main(string[] args)
         {
             if(args.Length == 0)
@@ -83,7 +81,7 @@ namespace easyWSL
                     Console.Write("A number of a distro you want to install: ");
                     
                     isConversionSuccessful = Int32.TryParse(Console.ReadLine(), out distroNumber);
-                } while ((distroNumber > sources.sources.Count + 1) ^ (isConversionSuccessful == false));
+                } while ((distroNumber < 1) ^ (distroNumber > sources.sources.Count + 1) ^ (isConversionSuccessful == false));
 
                 if(distroNumber == sources.sources.Count+1)
                 {
