@@ -113,18 +113,9 @@ namespace easyWSL
 
             string layersResponse = GetRequestWithHeader($"https://{registry}/v2/{repository}/manifests/{tag}", autorizationResponse.token, "application/vnd.docker.distribution.manifest.v2+json");
 
-
-            Console.WriteLine(layersResponse);
-
             MatchCollection layersRegex = Regex.Matches(layersResponse, @"sha256:\w{64}");
             var layersList = layersRegex.Cast<Match>().Select(match => match.Value).ToList();
             layersList.RemoveAt(0);
-
-            foreach (string layer in layersList)
-            {
-                Console.WriteLine(layer);
-            }
-
 
             string layersDirectory = $"{easyWSLDataDirectory}\\layers";
             Directory.CreateDirectory(layersDirectory);

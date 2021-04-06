@@ -81,26 +81,25 @@ namespace easyWSL
                     Console.Write("A number of a distro you want to install: ");
                     
                     isConversionSuccessful = Int32.TryParse(Console.ReadLine(), out distroNumber);
-                } while ((distroNumber < 1) ^ (distroNumber > sources.sources.Count + 1) ^ (isConversionSuccessful == false));
+                } while ((distroNumber < 1) ^ (distroNumber > sources.sources.Count + 1) ^ (isConversionSuccessful == false) ^ (distroNumber == 0));
 
                 if(distroNumber == sources.sources.Count+1)
                 {
-                    Console.Write("Specify a docker container: ");
-                    distroImage = Console.ReadLine();
+                    while (distroImage == "")
+                    {
+                        Console.Write("Specify a docker container: ");
+                        distroImage = Console.ReadLine();
+                    }
                 }
                 else
                 {
                     distroImage = sources.sources[distroNumber - 1].image;
                 }
-                
-
-                Console.WriteLine(distroImage);
-
             }
             
             if(distroName == "")
             {
-                if (distroNumber == sources.sources.Count + 1)
+                if ((distroNumber == sources.sources.Count + 1) || (distroNumber == 0))
                     Console.Write("A name for your distro: ");
                 else
                     Console.Write("A name for your distro (default " + sources.sources[distroNumber - 1].name + "): ");
