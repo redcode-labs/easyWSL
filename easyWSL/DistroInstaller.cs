@@ -8,12 +8,13 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace easyWSL
 {
     class DistroInstaller
     {
-        public class TokenFromResponse
+        public class autorizationResponse
         {
             public string token { get; set; }
             public string access_token { get; set; }
@@ -25,7 +26,7 @@ namespace easyWSL
         }
 
 
-        public static void InstallDistro(string distroID, string distroName, string distroPath, string easyWSLDataDirectory, string easyWSLDirectory)
+        public static void InstallDistro(string distroImage, string distroName, string distroPath, string easyWSLDataDirectory, string easyWSLDirectory)
         {
 
             void StartProcessSilently(string processName, string processArguments)
@@ -54,6 +55,20 @@ namespace easyWSL
                 return responseStream;
             }
 
+            string GetRequestWithHeader(string url, string token, string type)
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Headers.Add("Authorization", "Bearer " + token);
+                request.Accept = type;
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream receiveStream = response.GetResponseStream();
+                StreamReader readStream = new StreamReader(receiveStream, Encoding.UTF8);
+                string responseStream = readStream.ReadToEnd();
+                response.Close();
+                readStream.Close();
+                return responseStream;
+            }
+
             void GetRequestWithHeaderToFile(string url, string token, string type, string fileName)
             {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -65,74 +80,80 @@ namespace easyWSL
                 byte[] buffer = new byte[bufferSize];
 
                 FileStream fileStream = File.Create(fileName);
-                while((bytesRead = receiveStream.Read(buffer, 0, bufferSize)) != 0)
+                while ((bytesRead = receiveStream.Read(buffer, 0, bufferSize)) != 0)
                 {
                     fileStream.Write(buffer, 0, bytesRead);
                 }
-                
+
                 response.Close();
                 fileStream.Close();
             }
 
 
-            SortedDictionary<string, Sources> sources = JsonSerializer.Deserialize<SortedDictionary<string, Sources>>(File.ReadAllText("sources.json"), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            dynamic sources = JsonSerializer.Deserialize<Sources>(File.ReadAllText("sources.json"));
             string repository = "", tag = "", registry = "registry-1.docker.io", authorizationUrl = "https://auth.docker.io/token", registryUrl = "registry.docker.io";
 
-            if (sources[distroID].Image.Contains('/'))
+
+            if (distroImage.Contains('/'))
             {
-                string[] imageArray = sources[distroID].Image.Split('/');
+                string[] imageArray = distroImage.Split('/');
                 tag = "latest";
-                repository = sources[distroID].Image;
+                repository = distroImage;
             }
 
             else
             {
-                string[] imageArray = sources[distroID].Image.Split(':');
+                string[] imageArray = distroImage.Split(':');
                 string imgage = imageArray[0];
                 tag = imageArray[1];
                 repository = $"library/{imgage}";
             }
 
+            dynamic autorizationResponse = JsonSerializer.Deserialize<autorizationResponse>(GetRequest($"{authorizationUrl}?service={registryUrl}&scope=repository:{repository}:pull"));
 
-            dynamic tokenFromResponse = JsonSerializer.Deserialize<TokenFromResponse>(GetRequest($"{authorizationUrl}?service={registryUrl}&scope=repository:{repository}:pull"));
+            string layersResponse = GetRequestWithHeader($"https://{registry}/v2/{repository}/manifests/{tag}", autorizationResponse.token, "application/vnd.docker.distribution.manifest.v2+json");
+
+            MatchCollection layersRegex = Regex.Matches(layersResponse, @"sha256:\w{64}");
+            var layersList = layersRegex.Cast<Match>().Select(match => match.Value).ToList();
+            layersList.RemoveAt(0);
 
             string layersDirectory = $"{easyWSLDataDirectory}\\layers";
             Directory.CreateDirectory(layersDirectory);
 
-            string concatTarCommand = $" cf {layersDirectory}\\install.tar";
+            string concatTarCommand = $" cf {layersDirectory}\\{distroName}-install.tar";
 
             int count = 0;
-            foreach (string layer in sources[distroID].Layers)
+            foreach (string layer in layersList)
             {
                 count++;
                 Console.WriteLine($"Downloading {count}. layer ...");
 
-                tokenFromResponse = JsonSerializer.Deserialize<TokenFromResponse>(GetRequest($"{authorizationUrl}?service={registryUrl}&scope=repository:{repository}:pull"));
+                autorizationResponse = JsonSerializer.Deserialize<autorizationResponse>(GetRequest($"{authorizationUrl}?service={registryUrl}&scope=repository:{repository}:pull"));
 
-                string layerName = $"layer{count}.tar.bz";
+                string layerName = $"{distroName}-layer{count}.tar.bz";
                 string layerPath = $"{layersDirectory}\\{layerName}";
 
-                GetRequestWithHeaderToFile($"https://{registry}/v2/{repository}/blobs/{layer}", tokenFromResponse.token, "application/vnd.docker.distribution.manifest.v2+json", layerPath);
+                GetRequestWithHeaderToFile($"https://{registry}/v2/{repository}/blobs/{layer}", autorizationResponse.token, "application/vnd.docker.distribution.manifest.v2+json", layerPath);
                 concatTarCommand += $" @{layerPath} ";
             }
-
+            
 
             Console.WriteLine("Creating install.tar file ...");
-            if(sources[distroID].Layers.Count == 1)
+            if (layersList.Count == 1)
             {
-                File.Move($"{layersDirectory}\\layer1.tar.bz", $"{layersDirectory}\\install.tar.bz");
+                File.Move($"{layersDirectory}\\{distroName}-layer1.tar.bz", $"{layersDirectory}\\{distroName}-install.tar.bz");
 
                 Console.WriteLine("Registering the distro ...");
-                StartProcessSilently("wsl.exe", $"--import {distroName} {distroPath} {easyWSLDataDirectory}\\layers\\install.tar.bz");
+                StartProcessSilently("wsl.exe", $"--import {distroName} {distroPath} {easyWSLDataDirectory}\\layers\\{distroName}-install.tar.bz");
             }
             else
             {
                 StartProcessSilently($"{easyWSLDirectory}\\dep\\bsdtar.exe", concatTarCommand);
 
                 Console.WriteLine("Registering the distro ...");
-                StartProcessSilently("wsl.exe", $"--import {distroName} {distroPath} {easyWSLDataDirectory}\\layers\\install.tar");
+                StartProcessSilently("wsl.exe", $"--import {distroName} {distroPath} {easyWSLDataDirectory}\\layers\\{distroName}-install.tar");
             }
-            
+
 
             Console.WriteLine("Cleaning up ...");
             Directory.Delete(layersDirectory, true);

@@ -1,101 +1,80 @@
 ﻿{
-	"archlinux": {
-		"name": "ArchLinux",
-		"image": "archlinux:latest",
-		"layers": [ "sha256:cc7ff1c0e7225a03b06669026f98576552c6c608efd4474485532e681f67c58c", "sha256:503b62125c985d32e9a8faef48d50c978b9415c11cc0763b740f0d468f64ff97" ]
-	},
-
-	"ubuntu20.04": {
-		"name": "Ubuntu 20.04",
-		"image": "ubuntu:20.04",
-		"layers": [ "sha256:da7391352a9bb76b292a568c066aa4c3cbae8d494e6a3c68e3c596d34f7c75f8", "sha256:14428a6d4bcdba49a64127900a0691fb00a3f329aced25eb77e3b65646638f8d", "sha256:2c2d948710f21ad82dce71743b1654b45acb5c059cf5c19da491582cef6f2601" ]
-	},
-
-	"ubuntu20.10": {
-		"name": "Ubuntu 20.10",
-		"image": "ubuntu:20.10",
-		"layers": [ "sha256:d8b994c442864dd519627740d3a4d134f385a2caa54b7f59bf9d372adcf7def0", "sha256:b0773f3f14174f9bc8047861c64c2aa0cc581e73b16b48194a2884ad3918d01b", "sha256:5b20aefff2dc282ec6e2f496acce5b228bd1dfc30057a8ed41eae0513191b312" ]
-	},
-
-	"alpine": {
-		"name": "Alpine",
-		"image": "alpine:latest",
-		"layers": [ "sha256:801bfaa63ef2094d770c809815b9e2b9c1194728e5e754ef7bc764030e140cea" ]
-	},
-	
-	"debianstable": {
-		"name": "DebianStable",
-		"image": "debian:stable",
-		"layers": [ "sha256:5e0d4a82136cf43df758ea4260c3aba2203db5ed27b727940a7e2b7cfd6af580" ]
-	},
-
-	"debianunstable": {
-		"name": "DebianUnstable",
-		"image": "debian:unstable",
-		"layers": [ "sha256:38f54f0c57a31d9522970c134a72491612f81faaf99832d75020d1ad121d3b9c" ]
-	},
-
-	"debiantesting": {
-		"name": "DebianTesting",
-		"image": "debian:testing",
-		"layers": [ "sha256:ecd924c7226f314c16de965258f37da4aa990c07e494be1116af512706138401" ]
-	},
-
-	"centos": {
-		"name": "CentOS",
-		"image": "centos:latest",
-		"layers": [ "sha256:7a0437f04f83f084b7ed68ad9c4a4947e12fc4e1b006b38129bac89114ec3621" ]
-	},
-
-	"clearlinux": {
-		"name": "Clear Linux",
-		"image": "clearlinux:latest",
-		"layers": [ "sha256:d3ff7f519c930e7e7f52e7a9b42e4235f38349a56d0d604ed64660fae08f30c4" ]
-	},
-	
-	"fedora": {
-		"name": "Fedora",
-		"image": "fedora:latest",
-		"layers": [ "sha256:ae7b613df528a37664448affa6e52ff405701cda015a2a67301423bc20226b61" ]
-	},
-	"manjaro": {
-		"name": "Manjaro",
-		"image": "manjarolinux/base",
-		"layers": [ "sha256:216c2b07dc6cdef63748d768bbfcd394fcde275397835cb973d6aa857e9983a8" ]
-	},
-	"scientificlinux": {
-        "name": "Scientific Linux",
-        "image": "sl:latest",
-        "layers": [ "sha256:59d57c9268c8301abd28f5554dc4d14497c7cc8a281c85e06aafa8db92a1d079"]
+  "sources": [
+    {
+      "image": "archlinux:latest",
+      "name": "ArchLinux"
     },
-    "crux": {
-        "name": "Crux Linux",
-        "image": "crux:latest",
-        "layers": [ "sha256:180a5b3bafc3c941332c0ca2c40e004ae0aabfa7173a28d5ca5f8562f596442a"]
+    {
+      "image": "ubuntu:20.04",
+      "name": "Ubuntu 20.04"
     },
-    "void": {
-        "name": "Void Linux",
-        "image": "voidlinux/voidlinux",
-        "layers": [ "sha256:7a0058e958fe08e7b0265db555bcbd656ceced2f248ca41ac8547c8bc201738e", "sha256:67ec93f428d8f63dcc651f81271fa998d227078854eedbe258d054f0d9423915"]
+    {
+      "image": "ubuntu:20.10",
+      "name": "Ubuntu 20.10"
     },
-    "kali": {
-        "name": "Kali Linux",
-        "image": "kalilinux/kali-rolling",
-        "layers": [ "sha256:62a6cf2f6f69d34ddb39bf1a18c7ddfb3875687d4ecdae469d99acf63ccba839"]
+
+    {
+      "image": "alpine:latest",
+      "name": "Alpine"
     },
-    "opensuseleap": {
-        "name": "OpenSuse Leap",
-        "image": "opensuse/leap",
-        "layers": [ "sha256:0883b61588de8d468e590174a7dde9545b48770afade002e3925feba38310294" ]
+
+    {
+      "image": "debian:stable",
+      "name": "DebianStable"
     },
-    "parrot": {
-        "name": "Parrot Security OS",
-        "image": "parrotsec/security",
-        "layers": [ "sha256:250c4d9991f518f0e874345e1cb4c8da8d07bd6381b8dbd451c6c22dd607051d", "sha256:a5f5dddb8ddc210730ee23e3bbc35e9bb6173c3aeca3774e6f0fa43c10799dcc", "sha256:29060bcec7f56ba927952eca467626c723447777a6fb447f327e42c0e7f5ed58"]
+
+    {
+      "image": "debian:unstable",
+      "name": "DebianUnstable"
     },
-    "gentoo": {
-        "name": "Gentoo",
-        "image": "gentoo/stage3",
-        "layers": [ "sha256:915cbdf289072d1bdb8aaac4ce0808af9c9f7984738d19e3320985271c3e126d"]
+
+    {
+      "image": "debian:testing",
+      "name": "DebianTesting"
+    },
+    {
+      "image": "centos:latest",
+      "name": "CentOS"
+    },
+    {
+      "name": "Clear Linux",
+      "image": "clearlinux:latest"
+    },
+    {
+      "image": "fedora:latest",
+      "name": "Fedora"
+    },
+    {
+      "image": "manjarolinux/base",
+      "name": "Manjaro"
+    },
+    {
+      "name": "Scientific Linux",
+      "image": "sl:latest"
+    },
+    {
+      "image": "crux:latest",
+      "name": "Crux Linux"
+    },
+    {
+      "image": "voidlinux/voidlinux",
+      "name": "Void Linux"
+    },
+    {
+      "image": "kalilinux/kali-rolling",
+      "name": "Kali Linux"
+    },
+    {
+      "image": "opensuse/leap",
+      "name": "OpenSuse Leap"
+    },
+    {
+      "image": "parrotsec/security",
+      "name": "Parrot Security OS"
+    },
+    {
+      "image": "gentoo/stage3",
+      "name": "Gentoo"
     }
+  ]
 }

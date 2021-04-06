@@ -1,2 +1,0 @@
-easyWSL\bin
-easyWSL\obj
