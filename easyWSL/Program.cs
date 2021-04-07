@@ -36,6 +36,7 @@ namespace easyWSL
             int distroNumber = 0;
 
             bool isConversionSuccessful;
+            bool isCustomImageSpecified = false;
 
             string easyWSLDirectory = (Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).Remove(0, 6);
             string easyWSLDataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "easyWSL");
@@ -90,6 +91,7 @@ namespace easyWSL
                         Console.Write("Specify a docker container: ");
                         distroImage = Console.ReadLine();
                     }
+                    isCustomImageSpecified = true;
                 }
                 else
                 {
@@ -99,7 +101,7 @@ namespace easyWSL
             
             if(distroName == "")
             {
-                if ((distroNumber == sources.sources.Count + 1) || (distroNumber == 0))
+                if ((isCustomImageSpecified == true) || (distroNumber == 0))
                     Console.Write("A name for your distro: ");
                 else
                     Console.Write("A name for your distro (default " + sources.sources[distroNumber - 1].name + "): ");
@@ -107,7 +109,7 @@ namespace easyWSL
 
                 if (distroName == "")
                 {
-                    if (distroNumber == sources.sources.Count + 1)
+                    if (isCustomImageSpecified == true)
                     {
                         while(distroName == "")
                         {
@@ -141,7 +143,7 @@ namespace easyWSL
 
             Directory.CreateDirectory(distroPath);
 
-            DistroInstaller.InstallDistro(distroImage, distroName, distroPath, easyWSLDataDirectory, easyWSLDirectory);
+            DistroInstaller.InstallDistro(distroImage, distroName, distroPath, easyWSLDataDirectory, easyWSLDirectory, isCustomImageSpecified);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace easyWSL
         }
 
 
-        public static void InstallDistro(string distroImage, string distroName, string distroPath, string easyWSLDataDirectory, string easyWSLDirectory)
+        public static void InstallDistro(string distroImage, string distroName, string distroPath, string easyWSLDataDirectory, string easyWSLDirectory, bool isCustomImageSpecified)
         {
 
             void StartProcessSilently(string processName, string processArguments)
@@ -34,8 +34,6 @@ namespace easyWSL
                 ProcessStartInfo psi = new ProcessStartInfo();
                 psi.FileName = processName;
                 psi.UseShellExecute = false;
-                psi.RedirectStandardError = true;
-                psi.RedirectStandardOutput = true;
                 psi.Arguments = processArguments;
 
                 Process proc = Process.Start(psi);
@@ -158,19 +156,22 @@ namespace easyWSL
             Console.WriteLine("Cleaning up ...");
             Directory.Delete(layersDirectory, true);
 
-            Console.Write($"Do you want to start {distroName} distribution? [Y/n]:");
-            ConsoleKeyInfo chooseToStart = Console.ReadKey();
-            do
+            if (isCustomImageSpecified == false)
             {
-                if ((chooseToStart.Key == ConsoleKey.Y) ^ (chooseToStart.Key == ConsoleKey.Enter))
-                    Process.Start("wsl.exe", $"-d {distroName}");
+                string postInstallPathWindows = $"{easyWSLDirectory}\\post-install.sh";
+                string postInstallPathLinux = postInstallPathWindows.Replace(@"\", "/");
+                char windowsDriveLetter = Char.ToLower(postInstallPathLinux[0]);
+                postInstallPathLinux = postInstallPathLinux.Remove(0, 2);
+                postInstallPathLinux = $"/mnt/{windowsDriveLetter}{postInstallPathLinux}";
 
 
-                else if (chooseToStart.Key == ConsoleKey.N)
-                    Environment.Exit(0);
-            } while ((chooseToStart.Key != ConsoleKey.Y) & (chooseToStart.Key != ConsoleKey.Enter) & (chooseToStart.Key != ConsoleKey.N));
+                StartProcessSilently("wsl.exe", $"-d {distroName} \"{postInstallPathLinux}\"");
+                StartProcessSilently("wsl.exe", $"-t {distroName}");
+                StartProcessSilently("wsl.exe", $"-d {distroName}");
+            }
 
-
+            else
+                StartProcessSilently("wsl.exe", $"-d {distroName}");
         }
     }
 }
