@@ -60,7 +60,7 @@ chmod 755 /bin/su
 chmod u+s /bin/su
 
 while true; do
-  read -p "Do you want to create a new user with administrator privilages? [y/n]: " yn
+  read -p "Do you want to create a new user with administrator privileges? [y/n]: " yn
   case $yn in
     [Yy]* ) add_user; break;;
     [Nn]* ) set_root_passwd; break;;
