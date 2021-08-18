@@ -95,10 +95,18 @@ namespace easyWSL
             if (distroImage.Contains('/'))
             {
                 string[] imageArray = distroImage.Split('/');
-                tag = "latest";
-                repository = distroImage;
-            }
 
+                if (imageArray[1].Contains(':'))
+                {
+                    tag = imageArray[1].Split(':')[1];
+                    repository = distroImage.Split(':')[0];
+                }
+                else
+                {
+                    tag = "latest";
+                    repository = distroImage;
+                }
+            }
             else
             {
                 string[] imageArray = distroImage.Split(':');
