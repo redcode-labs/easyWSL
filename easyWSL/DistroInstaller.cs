@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Threading;
 using System.Text.RegularExpressions;
+using System.Security.Cryptography;
 
 namespace easyWSL
 {
@@ -67,24 +68,48 @@ namespace easyWSL
                 return responseStream;
             }
 
-            void GetRequestWithHeaderToFile(string url, string token, string type, string fileName)
+            void GetRequestWithHeaderToFile(string url, string token, string type, string fileName, int size)
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Headers.Add("Authorization", "Bearer " + token);
-                request.Accept = type;
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                Stream receiveStream = response.GetResponseStream();
-                int bufferSize = 1024, bytesRead = 0;
-                byte[] buffer = new byte[bufferSize];
 
-                FileStream fileStream = File.Create(fileName);
-                while ((bytesRead = receiveStream.Read(buffer, 0, bufferSize)) != 0)
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                    request.Headers.Add("Authorization", "Bearer " + token);
+                    request.Accept = type;
+                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                    Stream receiveStream = response.GetResponseStream();
+                    int bufferSize = 1024, bytesRead = 0;
+                    byte[] buffer = new byte[bufferSize];
+
+                    FileStream fileStream = File.Create(fileName);
+                    int bytes = 0;
+                using (var progress = new ProgressBar())
                 {
-                    fileStream.Write(buffer, 0, bytesRead);
-                }
+                    while ((bytesRead = receiveStream.Read(buffer, 0, bufferSize)) != 0)
+                    {
+                        progress.Report((double)bytes * 100 / size);
+                        fileStream.Write(buffer, 0, bytesRead);
+                        bytes += bytesRead;
+                        //Console.Write($"\r{bytes}/{size} bytes downloaded");
+                    }
 
+                }
                 response.Close();
-                fileStream.Close();
+                    fileStream.Close();
+                    //Console.Write("\n");
+                
+            }
+            string ComputeSha256Hash(byte[] rawData)
+            {
+                using (SHA256 sha256Hash = SHA256.Create())
+                {
+                    byte[] bytes = sha256Hash.ComputeHash(rawData);
+
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < bytes.Length; i++)
+                    {
+                        builder.Append(bytes[i].ToString("x2"));
+                    }
+                    return builder.ToString();
+                }
             }
 
 
@@ -123,6 +148,9 @@ namespace easyWSL
             var layersList = layersRegex.Cast<Match>().Select(match => match.Value).ToList();
             layersList.RemoveAt(0);
 
+            MatchCollection layersSizeRegex = Regex.Matches(layersResponse, @"""size"": \d*");
+            var layersSizeList = layersSizeRegex.Cast<Match>().Select(match => Convert.ToInt32(match.Value.Remove(0,8))).ToList();
+
             string layersDirectory = $"{easyWSLDataDirectory}\\layers";
             Directory.CreateDirectory(layersDirectory);
 
@@ -139,7 +167,24 @@ namespace easyWSL
                 string layerName = $"{distroName}-layer{count}.tar.bz";
                 string layerPath = $"{layersDirectory}\\{layerName}";
 
-                GetRequestWithHeaderToFile($"https://{registry}/v2/{repository}/blobs/{layer}", autorizationResponse.token, "application/vnd.docker.distribution.manifest.v2+json", layerPath);
+                GetRequestWithHeaderToFile($"https://{registry}/v2/{repository}/blobs/{layer}", autorizationResponse.token, "application/vnd.docker.distribution.manifest.v2+json", layerPath, layersSizeList[count]);
+
+                Console.Write("Veryfing the layer... ");
+                string layerHash = ComputeSha256Hash(File.ReadAllBytes(layerPath));
+                if (layerHash == layer.Remove(0,7))
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("PASSED\n");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("NOT PASSED\n");
+                    Console.ResetColor();
+                    Console.WriteLine("Aborting...");
+                    Environment.Exit(0);
+                }
                 concatTarCommand += $" @{layerPath} ";
             }
             
@@ -159,7 +204,6 @@ namespace easyWSL
                 Console.WriteLine("Registering the distro ...");
                 StartProcessSilently("wsl.exe", $"--import {distroName} {distroPath} {easyWSLDataDirectory}\\layers\\{distroName}-install.tar");
             }
-
 
             Console.WriteLine("Cleaning up ...");
             Directory.Delete(layersDirectory, true);

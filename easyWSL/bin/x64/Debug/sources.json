@@ -1,0 +1,80 @@
+﻿{
+  "sources": [
+    {
+      "image": "archlinux:latest",
+      "name": "ArchLinux"
+    },
+    {
+      "image": "ubuntu:20.04",
+      "name": "Ubuntu 20.04"
+    },
+    {
+      "image": "ubuntu:20.10",
+      "name": "Ubuntu 20.10"
+    },
+
+    {
+      "image": "alpine:latest",
+      "name": "Alpine"
+    },
+
+    {
+      "image": "debian:stable",
+      "name": "DebianStable"
+    },
+
+    {
+      "image": "debian:unstable",
+      "name": "DebianUnstable"
+    },
+
+    {
+      "image": "debian:testing",
+      "name": "DebianTesting"
+    },
+    {
+      "image": "centos:latest",
+      "name": "CentOS"
+    },
+    {
+      "name": "Clear Linux",
+      "image": "clearlinux:latest"
+    },
+    {
+      "image": "fedora:latest",
+      "name": "Fedora"
+    },
+    {
+      "image": "manjarolinux/base",
+      "name": "Manjaro"
+    },
+    {
+      "name": "Scientific Linux",
+      "image": "sl:latest"
+    },
+    {
+      "image": "crux:latest",
+      "name": "Crux Linux"
+    },
+    {
+      "image": "voidlinux/voidlinux",
+      "name": "Void Linux"
+    },
+    {
+      "image": "kalilinux/kali-rolling",
+      "name": "Kali Linux"
+    },
+    {
+      "image": "opensuse/leap",
+      "name": "OpenSuse Leap"
+    },
+    {
+      "image": "parrotsec/security",
+      "name": "Parrot Security OS"
+    },
+    {
+      "image": "gentoo/stage3",
+      "name": "Gentoo"
+    }
+  ]
+}
