@@ -1,4 +1,4 @@
-﻿echo "Upgrading the system ..."
+echo "Upgrading the system ..."
 if command -v apt &> /dev/null; then
   apt-get -y update &> /dev/null
   apt-get -y install sudo &> /dev/null
