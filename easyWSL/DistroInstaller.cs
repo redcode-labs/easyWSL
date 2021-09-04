@@ -81,20 +81,19 @@ namespace easyWSL
 
                     FileStream fileStream = File.Create(fileName);
                     int bytes = 0;
-                using (var progress = new ProgressBar())
-                {
+                    double percentDownloaded = 0;
                     while ((bytesRead = receiveStream.Read(buffer, 0, bufferSize)) != 0)
                     {
-                        progress.Report((double)bytes * 100 / size);
+                        
                         fileStream.Write(buffer, 0, bytesRead);
                         bytes += bytesRead;
-                        //Console.Write($"\r{bytes}/{size} bytes downloaded");
+                        percentDownloaded = (double)bytes / size * 100;
+                        Console.Write($"\r{(int)percentDownloaded}% downloaded");
                     }
 
-                }
-                response.Close();
+                    response.Close();
                     fileStream.Close();
-                    //Console.Write("\n");
+                    Console.Write("\n");
                 
             }
             string ComputeSha256Hash(byte[] rawData)
