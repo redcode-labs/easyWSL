@@ -35,18 +35,19 @@ fi
 add_user()
 {
   echo "Creating the user account ..."
-  read -p "Username: " USERNAME
+  printf "Username: "
+  read -r USERNAME
   if command -v bash > /dev/null 2>&1
   then
     USER_SHELL="/bin/bash"
   else
     USER_SHELL="/bin/sh"
   fi
-  useradd -m -s $USER_SHELL $USERNAME
-  while ! passwd $USERNAME; do
+  useradd -m -s "$USER_SHELL" "$USERNAME"
+  while ! passwd "$USERNAME"; do
     echo Try again.
   done
-  printf "$USERNAME ALL=(ALL:ALL) ALL" >> /etc/sudoers
+  printf "%s ALL=(ALL:ALL) ALL" "$USERNAME" >> /etc/sudoers
   printf "%s\n" "[user]" "default=$USERNAME" >> /etc/wsl.conf
 }
 
@@ -67,8 +68,8 @@ chmod 755 /bin/su
 chmod u+s /bin/su
 
 while true; do
-  echo -n "Do you want to create a new user with administrator privileges? [y/n]: "
-  read answer
+  printf "Do you want to create a new user with administrator privileges? [y/n]: "
+  read -r answer
   if [ "$answer" != "${answer#[Yy]}" ]; then
     add_user
     break
