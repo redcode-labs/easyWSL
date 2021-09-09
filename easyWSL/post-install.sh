@@ -36,7 +36,13 @@ add_user()
 {
   echo "Creating the user account ..."
   read -p "Username: " USERNAME
-  useradd -m -s /bin/bash $USERNAME
+  if command -v bash > /dev/null 2>&1
+  then
+    USER_SHELL="/bin/bash"
+  else
+    USER_SHELL="/bin/sh"
+  fi
+  useradd -m -s $USER_SHELL $USERNAME
   while ! passwd $USERNAME; do
     echo Try again.
   done
@@ -65,7 +71,9 @@ while true; do
   read answer
   if [ "$answer" != "${answer#[Yy]}" ]; then
     add_user
+    break
   else
     set_root_passwd
+    break
   fi
 done
