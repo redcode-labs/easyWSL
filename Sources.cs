@@ -12,7 +12,7 @@ namespace easyWSL
     }
 
     public class SourceProperties
-    { 
+    {
         public string image { get; set; }
         public string name { get; set; }
     }

@@ -71,30 +71,30 @@ namespace easyWSL
             void GetRequestWithHeaderToFile(string url, string token, string type, string fileName, int size)
             {
 
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                    request.Headers.Add("Authorization", "Bearer " + token);
-                    request.Accept = type;
-                    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                    Stream receiveStream = response.GetResponseStream();
-                    int bufferSize = 1024, bytesRead = 0;
-                    byte[] buffer = new byte[bufferSize];
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Headers.Add("Authorization", "Bearer " + token);
+                request.Accept = type;
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream receiveStream = response.GetResponseStream();
+                int bufferSize = 1024, bytesRead = 0;
+                byte[] buffer = new byte[bufferSize];
 
-                    FileStream fileStream = File.Create(fileName);
-                    int bytes = 0;
-                    double percentDownloaded = 0;
-                    while ((bytesRead = receiveStream.Read(buffer, 0, bufferSize)) != 0)
-                    {
-                        
-                        fileStream.Write(buffer, 0, bytesRead);
-                        bytes += bytesRead;
-                        percentDownloaded = (double)bytes / size * 100;
-                        Console.Write($"\r{(int)percentDownloaded}% downloaded");
-                    }
+                FileStream fileStream = File.Create(fileName);
+                int bytes = 0;
+                double percentDownloaded = 0;
+                while ((bytesRead = receiveStream.Read(buffer, 0, bufferSize)) != 0)
+                {
 
-                    response.Close();
-                    fileStream.Close();
-                    Console.Write("\n");
-                
+                    fileStream.Write(buffer, 0, bytesRead);
+                    bytes += bytesRead;
+                    percentDownloaded = (double)bytes / size * 100;
+                    Console.Write($"\r{(int)percentDownloaded}% downloaded");
+                }
+
+                response.Close();
+                fileStream.Close();
+                Console.Write("\n");
+
             }
             string ComputeSha256Hash(byte[] rawData)
             {
@@ -148,7 +148,7 @@ namespace easyWSL
             layersList.RemoveAt(0);
 
             MatchCollection layersSizeRegex = Regex.Matches(layersResponse, @"""size"": \d*");
-            var layersSizeList = layersSizeRegex.Cast<Match>().Select(match => Convert.ToInt32(match.Value.Remove(0,8))).ToList();
+            var layersSizeList = layersSizeRegex.Cast<Match>().Select(match => Convert.ToInt32(match.Value.Remove(0, 8))).ToList();
 
             string layersDirectory = $"{easyWSLDataDirectory}\\layers";
             Directory.CreateDirectory(layersDirectory);
@@ -170,7 +170,7 @@ namespace easyWSL
 
                 Console.Write("Veryfing the layer... ");
                 string layerHash = ComputeSha256Hash(File.ReadAllBytes(layerPath));
-                if (layerHash == layer.Remove(0,7))
+                if (layerHash == layer.Remove(0, 7))
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.Write("PASSED\n");
@@ -186,7 +186,7 @@ namespace easyWSL
                 }
                 concatTarCommand += $" @{layerPath} ";
             }
-            
+
 
             Console.WriteLine("Creating install.tar file ...");
             if (layersList.Count == 1)

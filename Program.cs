@@ -17,7 +17,7 @@ namespace easyWSL
     {
         static void Main(string[] args)
         {
-            if(args.Length == 0)
+            if (args.Length == 0)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("                          _       _______ __ ");
@@ -31,7 +31,7 @@ namespace easyWSL
             }
 
             dynamic sources = JsonSerializer.Deserialize<Sources>(File.ReadAllText("sources.json"));
-        
+
             string distroImage = "", distroName = "", distroPath = "";
             int distroNumber = 0;
 
@@ -40,7 +40,7 @@ namespace easyWSL
 
             string easyWSLDirectory = (Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase)).Remove(0, 6);
             string easyWSLDataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "easyWSL");
-            
+
             string distrosDirectory = $"{easyWSLDataDirectory}\\distros";
             Directory.CreateDirectory(distrosDirectory);
 
@@ -80,11 +80,11 @@ namespace easyWSL
                 do
                 {
                     Console.Write("A number of a distro you want to install: ");
-                    
+
                     isConversionSuccessful = Int32.TryParse(Console.ReadLine(), out distroNumber);
                 } while ((distroNumber < 1) ^ (distroNumber > sources.sources.Count + 1) ^ (isConversionSuccessful == false) ^ (distroNumber == 0));
 
-                if(distroNumber == sources.sources.Count+1)
+                if (distroNumber == sources.sources.Count + 1)
                 {
                     while (distroImage == "")
                     {
@@ -98,8 +98,8 @@ namespace easyWSL
                     distroImage = sources.sources[distroNumber - 1].image;
                 }
             }
-            
-            if(distroName == "")
+
+            if (distroName == "")
             {
                 if ((isCustomImageSpecified == true) || (distroNumber == 0))
                     Console.Write("A name for your distro: ");
@@ -111,30 +111,30 @@ namespace easyWSL
                 {
                     if (isCustomImageSpecified == true)
                     {
-                        while(distroName == "")
+                        while (distroName == "")
                         {
                             Console.Write("A name for your distro: ");
                             distroName = Console.ReadLine();
                         }
                     }
                     else
-                        distroName = sources.sources[distroNumber-1].name;
+                        distroName = sources.sources[distroNumber - 1].name;
                 }
 
                 distroName = Regex.Replace(distroName, @"\s+", "");
             }
 
-            if( Directory.Exists(distroPath) == false)
+            if (Directory.Exists(distroPath) == false)
             {
 
                 do
                 {
                     Console.Write("A path to a directory where you want to store your distro (default is " + distrosDirectory + "\\" + distroName + "): ");
                     distroPath = Console.ReadLine();
-                } while((Directory.Exists(distroPath) == false) ^ (distroPath == ""));
-                
+                } while ((Directory.Exists(distroPath) == false) ^ (distroPath == ""));
 
-                if(distroPath == "")
+
+                if (distroPath == "")
                 {
                     distroPath = distrosDirectory + "\\" + distroName;
                 }
