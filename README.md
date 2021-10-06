@@ -19,6 +19,25 @@ There's a script inside which downloads a .tar or .tar.gz image from Docker Hub.
 
 Just go to our release page, download latest release and just run it. Done!
 
+## Building on your own
+
+### Prerequisites
+
+* Windows 10 1607 or later (for WSL1) or Windows 10 1903 (18362) or later
+   * Note: you might want to check instructions on how to enable WSL [here](https://docs.microsoft.com/en-us/windows/wsl/install-manual)
+* [Developer Mode enabled](https://docs.microsoft.com/windows/uwp/get-started/enable-your-device-for-development)
+* [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/) or later
+* The following workloads:
+   * .NET Desktop Development
+* The following extensions:
+   * [System.Text.Json](https://www.nuget.org/packages/System.Text.Json/5.0.2?_src=template)
+
+(Upon opening the repo in Visual Studio, it will prompt you to install any missing workloads and features.)
+
+### Building
+
+We currently only build using the solution; command line methods of building a VS solution should work as well.
+
 ## Command List
 
 `--help` / `-h` -> list all available commands
