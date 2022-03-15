@@ -11,6 +11,10 @@
 
 > Made with ❤ by @wrobeljakub and @redcode-labs team.
 
+## easyWSL 2.0
+
+The new version of easyWSL with graphical interface and many new features is almost finished. If you want to test the upcoming release please fill out [this form](https://docs.google.com/forms/d/e/1FAIpQLScPDEdioodHhtJHdnrep4boNk4NAHyvwiQ0XZSKh26omkWfGg/viewform).
+
 ## What does this project do?
 
 There's a script inside which downloads a .tar or .tar.gz image from Docker Hub. In fact, it can be more than just one .tar/.tar.gz, that's why bsdtar.exe is included in this repo, because it is responsible for 'merging' all .tar/.tar.gz files together. Then, one big .tar/.tar.gz is created (if it's needed, we don't have to do this thing if the image contains just one layer) and can be easily exported as a WSL distro.
