@@ -1,0 +1,37 @@
+﻿<Page
+    x:Class="easyWSL.ManageSnapshotsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:easyWSL"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="100" />
+        </Grid.RowDefinitions>
+        <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" Grid.Row="0" HorizontalAlignment="Left">
+            <AppBarButton x:Name="addSnapshotButton" Icon="Add" Label="Add snapshot" Click="addSnapshotButton_Click" />
+            <AppBarButton x:Name="removeSnapshotButton" Icon="Remove" Label="Remove snapshot" Click="removeSnapshotButton_Click" />
+            <AppBarButton x:Name="registerDistroFromSnapshotButton" Icon="Play" Label="Register distro from snapshot" Click="registerDistroFromSnapshotButton_Click" />
+            <AppBarButton x:Name="openSnapshotsButton" Icon="OpenLocal" Label="Open snapshots folder" Click="openSnapshotsButton_Click" />
+        </CommandBar>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <ComboBox x:Name="distrosComboBox" SelectionChanged="distrosComboBox_SelectionChanged" Header="Select distribution" SelectedIndex="0" Margin="20" SelectionChangedTrigger="Committed" Width="200"></ComboBox>
+        </StackPanel>
+        <StackPanel  Grid.Row="2">
+            <TextBlock x:Name="snapshotsTitle"  Style="{StaticResource SubtitleTextBlockStyle}" Margin="20 0 0 20" ></TextBlock>
+            <ListView x:Name="snapshotsListView" SelectedIndex="0" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="3">
+            <TextBlock x:Name="snapshottingStatusTextBlock" Visibility="Collapsed" Margin="20 5"/>
+            <muxc:ProgressBar x:Name="snapshottingProgressBar" Visibility="Collapsed" IsIndeterminate="True" Margin="20"/>
+        </StackPanel>
+    </Grid>
+</Page>

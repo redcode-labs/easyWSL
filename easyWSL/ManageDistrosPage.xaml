@@ -1,0 +1,57 @@
+﻿<Page
+    x:Class="easyWSL.ManageDistrosPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:easyWSL"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" x:Name="listboxRow"/>
+        </Grid.RowDefinitions>
+        <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" Grid.Row="0" HorizontalAlignment="Left">
+            <AppBarButton x:Name="startDistroButton" Icon="Play" Label="Start distro" Click="startDistroButton_Click"/>
+            <AppBarButton x:Name="stopDistroButton" Icon="Stop" Label="Stop distro" Click="stopDistroButton_Click"/>
+            <AppBarButton x:Name="removeDistroButton" Icon="Remove" Label="Unregister" Click="removeDistroButton_Click" />
+            <AppBarButton x:Name="moreInfoButton" Icon="View" Label="More info" Click="moreInfoButton_Click"/>
+            <AppBarButton x:Name="setDefaultDistroButton" Icon="OutlineStar" Label="Set Default" Click="setDefaultDistroButton_Click" />
+            <AppBarButton x:Name="openFilesystemButton" Icon="OpenLocal" Label="Open filesystem" Click="openFilesystemButton_Click" />
+        </CommandBar>
+        <Grid Grid.Row="1" Margin="0 20 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Name" Grid.Column="0" Margin="10, 0, 0, 0" Style="{StaticResource BodyStrongTextBlockStyle}" />
+            <TextBlock Text="Size" Grid.Column="1" Style="{StaticResource BodyStrongTextBlockStyle}" />
+            <TextBlock Text="Version" Grid.Column="2" Style="{StaticResource BodyStrongTextBlockStyle}" />
+        </Grid>
+        <ListView x:Name="distrosListView" Grid.Row="2" SelectionChanged="distrosListView_SelectionChanged" SelectedValuePath="name">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Path=name}" Grid.Column="0"/>
+                        <TextBlock Text="{Binding Path=size}" Grid.Column="1"/>
+                        <TextBlock Text="{Binding Path=version}" Grid.Column="2"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ContentDialog x:Name="confirmDistroRemovalDialog" CloseButtonText="No"  PrimaryButtonText="Yes" PrimaryButtonStyle="{StaticResource AccentButtonStyle}">
+            <StackPanel>
+                <TextBlock TextWrapping="WrapWholeWords">All your data stored on this distribution will be gone.</TextBlock>
+            </StackPanel>
+        </ContentDialog>
+    </Grid>
+</Page>

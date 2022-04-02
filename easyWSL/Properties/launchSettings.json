@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "easyWSL (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "easyWSL (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

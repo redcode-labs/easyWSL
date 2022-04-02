@@ -1,0 +1,79 @@
+﻿<Page
+    x:Class="easyWSL.RegisterNewDistro_Page"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:easyWSL"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <ScrollViewer
+            IsTabStop="True" IsVerticalScrollChainingEnabled="True"
+            VerticalScrollMode="Enabled" VerticalScrollBarVisibility="Auto">
+        <Grid Margin="40">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0">
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Margin="0 0 0 20">Distribution details</TextBlock>
+                <TextBox x:Name="distroNameTextBox" Header="Distro name" Margin="10" IsSpellCheckEnabled="False"/>
+                <ComboBox x:Name="distroSourceComboBox" SelectionChanged="distroSourceComboBox_SelectionChanged" Header="Select distro source" PlaceholderText="Source" Width="200" Margin="10" SelectedIndex="0">
+                    <x:String>Supported distro list</x:String>
+                    <x:String>Docker Hub</x:String>
+                    <x:String>Local hard drive</x:String>
+                </ComboBox>
+                <ListView x:Name="SupportedDistroListbox" Width="200" Height="300" Margin="10" Visibility="Visible" HorizontalAlignment="Left" BorderThickness="1" BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" />
+                <Button x:Name="tarballFileChooserButton" Margin="10" Visibility="Collapsed" Click="ChooseDistroTarball">Browse</Button>
+                <TextBlock Margin="10" Visibility="Collapsed" x:Name="tarbalPath"></TextBlock>
+                <TextBox Margin="10" Visibility="Collapsed" x:Name="dockerImageTextBox" PlaceholderText="Specify image from Docker Hub" Header="Docker image" IsSpellCheckEnabled="False"/>
+                <StackPanel x:Name="dockerImageDescription" Visibility="Collapsed" Margin="10 0 10 10">
+                    <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0 5" >Supported image formats</TextBlock>
+                    <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Margin="0 2">image:tag</TextBlock>
+                    <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Margin="0 2">profile/image</TextBlock>
+                    <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Margin="0 2" >profile/image:tag</TextBlock>
+                </StackPanel>
+                <StackPanel x:Name="tarballDescription" Visibility="Collapsed" Margin="10 0 10 10">
+                    <TextBlock Style="{StaticResource CaptionTextBlockStyle}">Select a linux rootfs in *.tar or *.tar.bz format.</TextBlock>
+                </StackPanel>
+                <Button x:Name="registerDistroProceedButton" Style="{StaticResource AccentButtonStyle}" Content="Register distro" Margin="10" HorizontalAlignment="Left" Click="registerDistroProceedButton_Click"/>
+            </StackPanel>
+            <StackPanel x:Name="createUserStackPanel" Orientation="Vertical" Grid.Column="1" Visibility="Visible" Margin="30 0 0 0" Grid.Row="0">
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Margin="0 0 0 20">Configure user account</TextBlock>
+                <ToggleSwitch x:Name="newUserSwitch" Header="Do you want to add a new user?" OffContent="No" OnContent="Yes" IsOn="False" Margin="10" Toggled="newUserSwitch_Toggled"/>
+                <TextBox x:Name="userNameTextBox" Header="Username" Margin="10" Visibility="Collapsed" IsSpellCheckEnabled="False"/>
+                <Grid x:Name="passwordTextBoxGrid" Visibility="Collapsed">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <PasswordBox AutomationProperties.Name="Simple PasswordBox" x:Name="password1TextBox" Header="Password" Margin="10" Grid.Column="0"/>
+                    <PasswordBox AutomationProperties.Name="Simple PasswordBox" x:Name="password2TextBox" Header="Confirm password" Margin="10" Grid.Column="1"/>
+                </Grid>
+                <ToggleSwitch x:Name="isAdminSwitch" Header="Make this user administrator?" OffContent="No" OnContent="Yes" IsOn="True" Margin="10" Visibility="Collapsed"></ToggleSwitch>
+                <ToggleSwitch x:Name="winHelloSwitch" Header="Enable Windows Hello as default sudo authentication (experimental)" OffContent="No" OnContent="Yes" IsOn="False" Margin="10" Visibility="Collapsed"></ToggleSwitch>
+            </StackPanel>
+            <StackPanel x:Name="configureDevEnvStackPanel" Orientation="Vertical" Grid.Column="2" Visibility="Visible" Margin="30 0" Grid.Row="0">
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Margin="0 0 0 10">Set up development environment</TextBlock>
+                <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0 0 0 20">(Experimental)</TextBlock>
+                <CheckBox x:Name="pythonCheckbox" Content="Python" FontWeight="SemiBold" Margin="0 10"/>
+                <CheckBox x:Name="nodeCheckbox" Content="Node.js" FontWeight="SemiBold" Margin="0 10"/>
+                <CheckBox x:Name="goCheckbox" Content="Go" FontWeight="SemiBold" Margin="0 10"/>
+                <CheckBox x:Name="cppCheckbox" Content="C/C++" FontWeight="SemiBold" Margin="0 10"/>
+                <CheckBox x:Name="haskellCheckbox" Content="Haskell" FontWeight="SemiBold" Margin="0 10"/>
+                <CheckBox x:Name="javaCheckbox" Content="Java" FontWeight="SemiBold" Margin="0 10"/>
+            </StackPanel>
+            <StackPanel Grid.ColumnSpan="3" Grid.Row="1" Grid.Column="0">
+                <TextBlock x:Name="registeringStatusTextBlock" Visibility="Collapsed" Margin="10"/>
+                <muxc:ProgressBar x:Name="registerDistroProgressBar" Visibility="Collapsed"/>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+
+</Page>

@@ -1,0 +1,19 @@
+﻿<Application
+    x:Class="easyWSL.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:easyWSL">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+                <!-- Other merged dictionaries here -->
+            </ResourceDictionary.MergedDictionaries>
+            <!-- Other app resources here -->
+            <SolidColorBrush x:Key="WindowCaptionBackground">Black</SolidColorBrush>
+            <SolidColorBrush x:Key="WindowCaptionBackgroundDisabled">Black</SolidColorBrush>
+            <SolidColorBrush x:Key="WindowCaptionForeground">White</SolidColorBrush>
+            <SolidColorBrush x:Key="WindowCaptionForegroundDisabled">White</SolidColorBrush>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

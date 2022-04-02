@@ -1,0 +1,29 @@
+﻿<Page
+    x:Class="easyWSL.AboutDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:easyWSL"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel>
+        <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0 5 0 10">EasyWSL</TextBlock>
+        <RichTextBlock>
+            <Paragraph>WSL made easy. Create Linux distributions, manage them and make snapshots on Windows 10/11.</Paragraph>
+            <Paragraph Margin="0 5 0 0" FontWeight="Bold">Made by
+                <Hyperlink NavigateUri="https://redcodelabs.io/">Red Code Labs</Hyperlink>
+            </Paragraph>
+        </RichTextBlock>
+        <HyperlinkButton Content="License" NavigateUri="https://raw.githubusercontent.com/redcode-labs/easyWSL/master/LICENSE" Margin="0 10" />
+        <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0 10 0 0">Resources used</TextBlock>
+        <StackPanel Margin="5 5 0 0" Orientation="Horizontal">
+            <TextBlock Margin="0 6 0 0" >libarchive</TextBlock>
+            <HyperlinkButton Content="License" NavigateUri="https://raw.githubusercontent.com/libarchive/libarchive/master/COPYING" Margin="10 0"/>
+        </StackPanel>
+        <StackPanel Margin="5 5 0 0" Orientation="Horizontal">
+            <TextBlock Margin="0 6 0 0">WSL Hello sudo</TextBlock>
+            <HyperlinkButton Content="License" NavigateUri="https://raw.githubusercontent.com/nullpo-head/WSL-Hello-sudo/master/LICENSE.txt" Margin="10 0"/>
+        </StackPanel>
+    </StackPanel>
+</Page>
