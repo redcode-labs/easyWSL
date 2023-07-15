@@ -39,6 +39,7 @@
     <None Remove="RegisterNewDistro_Page.xaml" />
     <None Remove="SettingsPage.xaml" />
     <None Remove="WelcomeDialog.xaml" />
+    <None Remove="WelcomeWindow.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -108,6 +109,9 @@
     <None Update="dep\zlib1.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="WelcomeWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="WelcomeDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

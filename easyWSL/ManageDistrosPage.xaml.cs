@@ -32,34 +32,12 @@ namespace easyWSL
 
         private async Task RefreshInstalledDistros()
         {
-            await wslSdk.GetInstalledDistributions();
+            await  WslSdk.GetInstalledDistributions();
             distrosListView.ItemsSource = null;
             distrosListView.Items.Clear();
-            distrosListView.ItemsSource = wslSdk.InstalledDistros.Values;
-            if(distrosListView.Items.Count == 0)
-            {
-                WelcomeDialog welcomeDialogContent = new();
-                ContentDialog welcomeDialog = new ContentDialog();
-                welcomeDialog.XamlRoot = distrosListView.XamlRoot;
-                welcomeDialog.Title = $"Welcome to easyWSL";
-                welcomeDialog.Content = welcomeDialogContent;
-                welcomeDialog.DefaultButton = ContentDialogButton.Primary;
-                welcomeDialog.PrimaryButtonText = "Install WSL";
-                welcomeDialog.CloseButtonText = "WSL is already installed";
-
-                var result = await welcomeDialog.ShowAsync();
-                if(result == ContentDialogResult.Primary)
-                {
-                    var webPsi = new ProcessStartInfo
-                    {
-                        FileName = "https://docs.microsoft.com/en-us/windows/wsl/install",
-                        UseShellExecute = true
-                    };
-                    Process.Start(webPsi);
-                }
-            }
-            else
-            {
+            distrosListView.ItemsSource = WslSdk.InstalledDistros.Values;
+            if(distrosListView.Items.Count != 0) 
+            { 
                 distrosListView.SelectedIndex = 0;
             }
             
@@ -91,8 +69,8 @@ namespace easyWSL
         private async void moreInfoButton_Click(object sender, RoutedEventArgs e)
         {
             var name = selectedDistroName;
-            var version = wslSdk.InstalledDistros[name].version;
-            var path = wslSdk.InstalledDistros[name].path;
+            var version = WslSdk.InstalledDistros[name].version;
+            var path = WslSdk.InstalledDistros[name].path;
 
             var dialogContent = new MoreInfoDialog(name, version, path);
 
@@ -126,5 +104,6 @@ namespace easyWSL
         {
             await helpers.ExecuteProcessAsynch("wsl.exe", $"-t {selectedDistroName}");
         }
+
     }
 }

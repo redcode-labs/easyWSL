@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="easyWSL.WelcomeWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:easyWSL"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="400">
+        <TextBlock Style="{StaticResource TitleTextBlockStyle}" Margin="0 0 0 20">WSL is not installed on your system</TextBlock>
+        <RichTextBlock>
+            <Paragraph>This application requires
+                <Hyperlink NavigateUri="https://docs.microsoft.com/en-us/windows/wsl/about">Windows Subsystem For Linux</Hyperlink> enabled on your machine. Please install it and relaunch the application.
+            </Paragraph>
+        </RichTextBlock>
+        <Button Style="{StaticResource AccentButtonStyle}" x:Name="closeButton" Content="Close" Click="closeButton_Click" Margin="0 15"/>
+    </StackPanel>
+</Window>

@@ -18,7 +18,16 @@ namespace easyWSL
 
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            m_window = new NavigationRoot_Window();
+            var isWSLInstalled = WslSdk.CheckIfWSLInstalled();
+            if (!isWSLInstalled)
+            {
+                m_window = new WelcomeWindow();
+            }
+            else
+            {
+                m_window = new NavigationRoot_Window();
+            }
+
             m_window.Activate();
             m_window.Title = "easyWSL";
             m_windowhandle = User32.GetActiveWindow();
