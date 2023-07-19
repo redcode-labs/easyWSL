@@ -10,7 +10,7 @@ namespace easyWSL
     {
         private Helpers helpers = new();
 
-        public Dictionary<string, InstalledDistrosProperties> InstalledDistros = new Dictionary<string, InstalledDistrosProperties> { };
+        public static Dictionary<string, InstalledDistrosProperties> InstalledDistros = new Dictionary<string, InstalledDistrosProperties> { };
         public class InstalledDistrosProperties
         {
             public string name { get; set; }
@@ -21,16 +21,28 @@ namespace easyWSL
             public string size { get; set; }
         }
 
+        public static bool CheckIfWSLInstalled()
+        {
+            var currentUserReg = Registry.CurrentUser;
+            var lxssPathReg = currentUserReg.OpenSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows", "CurrentVersion", "Lxss"), false);
+            if (lxssPathReg == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
 
-        public async Task GetInstalledDistributions()
+        public static async Task GetInstalledDistributions()
         {
             InstalledDistros.Clear();
 
             var currentUserReg = Registry.CurrentUser;
             var lxssPathReg = currentUserReg.OpenSubKey(Path.Combine("SOFTWARE", "Microsoft", "Windows", "CurrentVersion", "Lxss"), false);
+  
             String[] distrosRegkeyNames = lxssPathReg.GetSubKeyNames();
-
-
             foreach (string distroRegkeyName in distrosRegkeyNames)
             {
                 var distroRegkey = lxssPathReg.OpenSubKey(distroRegkeyName, false);

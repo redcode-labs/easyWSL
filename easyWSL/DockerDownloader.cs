@@ -54,7 +54,7 @@ namespace easyWSL
 
             string repository = "";
             string tag = "";
-            string registry = "registry-1.docker.io";
+            string registry = "LLL";
             string authorizationUrl = "https://auth.docker.io/token";
             string registryUrl = "registry.docker.io";
 

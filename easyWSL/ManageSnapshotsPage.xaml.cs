@@ -29,8 +29,8 @@ namespace easyWSL
 
         public async Task RefreshDistros()
         {
-            await wslSdk.GetInstalledDistributions();
-            var distrosList = wslSdk.InstalledDistros.Values.Select(o => o.name);
+            await WslSdk.GetInstalledDistributions();
+            var distrosList = WslSdk.InstalledDistros.Values.Select(o => o.name);
             distrosComboBox.ItemsSource = distrosList;
 
             FillSnapshotsListView();
@@ -87,8 +87,8 @@ namespace easyWSL
 
         private async void FillSnapshotsListView()
         {
-            await wslSdk.GetInstalledDistributions();
-            var distrosList = wslSdk.InstalledDistros.Values.Select(o => o.name);
+            await WslSdk.GetInstalledDistributions();
+            var distrosList = WslSdk.InstalledDistros.Values.Select(o => o.name);
 
             var snapshotsStoragePath = Path.Combine(storageDirectory.Path, "snapshots");
             try
@@ -105,6 +105,10 @@ namespace easyWSL
             }
 
             var distro = distrosComboBox.SelectedValue as string;
+            if (distro == null)
+            {
+                return;
+            }
 
             var snapshotsPath = Path.Combine(storageDirectory.Path, "snapshots", distro);
             snapshotsList = Directory.EnumerateFiles(snapshotsPath, "*.tar.gz").ToList();
