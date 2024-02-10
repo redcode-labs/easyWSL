@@ -18,7 +18,7 @@ namespace easyWSL
         public PlatformHelpers(string tarCommand, Action<HttpProgress> httpProgressCallback)
         {
             TarCommand = tarCommand;
-            this._httpProgressCallback = _httpProgressCallback;
+            this._httpProgressCallback = httpProgressCallback;
         }
         public async Task CopyFileAsync(string sourcePath, string destinationPath)
         {

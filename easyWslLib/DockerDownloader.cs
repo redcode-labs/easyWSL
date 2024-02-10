@@ -48,6 +48,10 @@ namespace easyWslLib
 
         public async Task DownloadImage(string distroImage)
         {
+            if (!Directory.Exists(tmpDirectory))
+            {
+                Directory.CreateDirectory(tmpDirectory);
+            }
 
             DirectoryInfo tmpDirectoryInfo = new DirectoryInfo(tmpDirectory);
             foreach (FileInfo file in tmpDirectoryInfo.EnumerateFiles())

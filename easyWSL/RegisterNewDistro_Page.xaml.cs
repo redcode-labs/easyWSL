@@ -79,7 +79,7 @@ namespace easyWSL
         private async void registerDistroProceedButton_Click(object sender, RoutedEventArgs e)
         {
             easyWslLib.DockerDownloader dockerDownloader2 = new(App.tmpDirectory.Path,
-                new PlatformHelpers(Path.Combine(App.executableLocation, @"dep\bsdtar.exe"), HttpProgressCallback));
+                new PlatformHelpers(Path.Combine(App.executableLocation, "dep", "bsdtar.exe"), HttpProgressCallback));
 
 
             string image;

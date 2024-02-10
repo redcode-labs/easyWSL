@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "easyWSLcmd": {
+      "commandName": "Project",
+      "commandLineArgs": "import --name test --image redhat/ubi8"
+    }
+  }
+}

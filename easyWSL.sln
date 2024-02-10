@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "easyWSL", "easyWSL\easyWSL.csproj", "{B6C34736-A384-44BB-A43B-2F54EC32E175}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "easyWSLcmd", "easyWSLcmd\easyWSLcmd.csproj", "{350F963D-AD6E-4883-8405-F99D9770A9BB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "easyWslCmd", "easyWSLcmd\easyWslCmd.csproj", "{350F963D-AD6E-4883-8405-F99D9770A9BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "easyWslLib", "easyWslLib\easyWslLib.csproj", "{206BBF4A-1D8B-4CD4-9519-2633D5AB2562}"
 EndProject

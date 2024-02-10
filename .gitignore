@@ -1,6 +1,6 @@
 .vs/
-easyWSL/bin/
-easyWSL/obj/
+bin/
+obj/
 easyWSL/easyWSL.csproj.user
 easyWSL/Package.StoreAssociation.xml
 /easyWSLcmd/bin
