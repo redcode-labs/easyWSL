@@ -68,6 +68,9 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\easyWslLib\easyWslLib.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="ManageDistrosPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -3,8 +3,7 @@ easyWSL/bin/
 easyWSL/obj/
 easyWSL/easyWSL.csproj.user
 easyWSL/Package.StoreAssociation.xml
-/easyWSLcmd/bin/Debug/net6.0-windows10.0.19041.0
+/easyWSLcmd/bin
 /easyWSLcmd/obj
+/easyWslLib/bin
 /easyWslLib/obj
-/easyWSLcmd/bin/Debug/net6.0
-/easyWslLib/bin/Debug/net6.0

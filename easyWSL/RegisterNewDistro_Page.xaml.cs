@@ -7,7 +7,9 @@ using System.Runtime.InteropServices;
 using Windows.Storage.Pickers;
 using WinRT;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using easyWslLib;
 
 namespace easyWSL
 {
@@ -16,8 +18,8 @@ namespace easyWSL
 
         private string distroTarballPath;
         private string distroSource;
-        private Helpers helpers = new();
-        private DockerDownloader dockerDownloader = new();
+        private easyWslLib.Helpers helpers = new();
+        //private DockerDownloader dockerDownloader = new();
         private Windows.Storage.StorageFolder storageDirectory = Windows.Storage.ApplicationData.Current.LocalFolder;
 
         private Dictionary<string, string> distrosSources = new()
@@ -76,6 +78,10 @@ namespace easyWSL
         }
         private async void registerDistroProceedButton_Click(object sender, RoutedEventArgs e)
         {
+            easyWslLib.DockerDownloader dockerDownloader2 = new(App.tmpDirectory.Path,
+                new PlatformHelpers(Path.Combine(App.executableLocation, @"dep\bsdtar.exe"), HttpProgressCallback));
+
+
             string image;
             var distroName = distroNameTextBox.Text;
             string userName = "";
@@ -125,7 +131,8 @@ namespace easyWSL
 
                     try
                     {
-                        await dockerDownloader.DownloadImage(image, HttpProgressCallback);
+                        //await dockerDownloader.DownloadImage(image, HttpProgressCallback);
+                        await dockerDownloader2.DownloadImage(image);
                     }
                     catch (DockerDownloader.DockerException)
                     {
@@ -138,7 +145,8 @@ namespace easyWSL
                     registerDistroProgressBar.Visibility = Visibility.Collapsed;
                     registeringStatusTextBlock.Visibility = Visibility.Collapsed;
 
-                    await dockerDownloader.CombineLayers();
+                    //await dockerDownloader.CombineLayers();
+                    await dockerDownloader2.CombineLayers();
                     await RegisterDistro(distroName, Path.Combine(App.tmpDirectory.Path, "install.tar.bz"));
                     break;
                 case "Docker Hub":
@@ -150,7 +158,8 @@ namespace easyWSL
 
                     try
                     {
-                        await dockerDownloader.DownloadImage(image, HttpProgressCallback);
+                        //await dockerDownloader.DownloadImage(image, HttpProgressCallback);
+                        await dockerDownloader2.DownloadImage(image);
                     }
                     catch (DockerDownloader.DockerException)
                     {
@@ -163,7 +172,8 @@ namespace easyWSL
                     registerDistroProgressBar.Visibility = Visibility.Collapsed;
                     registeringStatusTextBlock.Visibility = Visibility.Collapsed;
 
-                    await dockerDownloader.CombineLayers();
+                    //await dockerDownloader.CombineLayers();
+                    await dockerDownloader2.CombineLayers();
                     await RegisterDistro(distroName, Path.Combine(App.tmpDirectory.Path, "install.tar.bz"));
                     break;
                 case "Local hard drive":
