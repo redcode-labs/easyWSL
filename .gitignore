@@ -3,7 +3,3 @@ bin/
 obj/
 easyWSL/easyWSL.csproj.user
 easyWSL/Package.StoreAssociation.xml
-/easyWSLcmd/bin
-/easyWSLcmd/obj
-/easyWslLib/bin
-/easyWslLib/obj
