@@ -10,7 +10,7 @@ var rootCommand = new RootCommand("Easy WSL");
 var distroName = new Option<string>("--name", "Name to assign to the new WSL distro");
 var imageName = new Option<string>("--image", "dockerhub image to base new distro on");
 var outputPath = new Option<DirectoryInfo>("--output", "Where to install the distro");
-outputPath.SetDefaultValue(new DirectoryInfo(Path.Combine(Path.GetTempPath(), "easyWSL")));
+outputPath.SetDefaultValue(new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "easyWSL")));
 
 var import = new Command("import", "Import a WSL distro from a dockerhub image");
 import.Add(distroName);
@@ -33,6 +33,9 @@ import.SetHandler(async (name, image, output) =>
     }
     var tempPath = Path.Combine(Path.GetTempPath(), "easyWSL");
     var downloader = new DockerDownloader(tempPath, new PlatformHelpers());
+
+    output = output.CreateSubdirectory(name);
+
 
     Console.WriteLine($"Downloading {image}");
     await downloader.DownloadImage(image);
