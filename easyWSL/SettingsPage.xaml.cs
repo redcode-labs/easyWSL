@@ -6,6 +6,7 @@ using System.Management;
 using System.Collections.Generic;
 using System.IO;
 using Windows.Storage.Pickers;
+using easyWslLib;
 
 namespace easyWSL
 {

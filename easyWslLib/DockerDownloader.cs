@@ -4,24 +4,28 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Streams;
-using Windows.Web.Http;
 
-namespace easyWSL
+namespace easyWslLib
 {
 
-    internal class DockerDownloader
+    public class DockerDownloader
     {
         private Helpers helpers = new();
-        
+
         private List<string> layersPaths = new();
 
-        private static string tmpDirectory = App.tmpDirectory.Path;
+        private readonly string tmpDirectory;
+        private readonly IPlatformHelpers platformHelpers;
+
+        public DockerDownloader(string tmpDirectory, IPlatformHelpers platformHelpers)
+        {
+            this.tmpDirectory = tmpDirectory;
+            this.platformHelpers = platformHelpers;
+        }
 
 
         public class autorizationResponse
@@ -42,8 +46,12 @@ namespace easyWSL
             }
         }
 
-            public async Task DownloadImage(string distroImage, Action<HttpProgress> httpProgressCallback)
+        public async Task DownloadImage(string distroImage)
+        {
+            if (!Directory.Exists(tmpDirectory))
             {
+                Directory.CreateDirectory(tmpDirectory);
+            }
 
             DirectoryInfo tmpDirectoryInfo = new DirectoryInfo(tmpDirectory);
             foreach (FileInfo file in tmpDirectoryInfo.EnumerateFiles())
@@ -54,7 +62,7 @@ namespace easyWSL
 
             string repository = "";
             string tag = "";
-            string registry = "LLL";
+            string registry = "registry-1.docker.io";
             string authorizationUrl = "https://auth.docker.io/token";
             string registryUrl = "registry.docker.io";
 
@@ -84,12 +92,12 @@ namespace easyWSL
                 {
                     throw (new DockerException());
                 }
-                string imgage = imageArray[0]; 
+                string imgage = imageArray[0];
                 tag = imageArray[1];
                 repository = $"library/{imgage}";
             }
 
-            dynamic autorizationResponse = JsonSerializer.Deserialize<autorizationResponse>(helpers.GetRequest($"{authorizationUrl}?service={registryUrl}&scope=repository:{repository}:pull"));
+            var autorizationResponse = JsonSerializer.Deserialize<autorizationResponse>(helpers.GetRequest($"{authorizationUrl}?service={registryUrl}&scope=repository:{repository}:pull"));
             string layersResponse;
             try
             {
@@ -107,7 +115,7 @@ namespace easyWSL
             MatchCollection layersSizeRegex = Regex.Matches(layersResponse, @"""size"": \d*");
             var layersSizeList = layersSizeRegex.Cast<Match>().Select(match => Convert.ToInt32(match.Value.Remove(0, 8))).ToList();
 
-            
+
             Trace.WriteLine(tmpDirectory);
             Directory.CreateDirectory(tmpDirectory);
 
@@ -123,40 +131,23 @@ namespace easyWSL
 
                 layersPaths.Add(layerPath);
 
-                Progress<HttpProgress> progressCallback = new Progress<HttpProgress>(httpProgressCallback);
-                var tokenSource = new CancellationTokenSource();
-                var httpRequestMessage = new HttpRequestMessage
+                var headers = new KeyValuePair<string, string>[]
                 {
-                    Method = HttpMethod.Get,
-                    RequestUri = new Uri($"https://{registry}/v2/{repository}/blobs/{layer}"),
-                    Headers = {
-                        { HttpRequestHeader.Authorization.ToString(), $"Bearer {autorizationResponse.token}" },
-                        { HttpRequestHeader.Accept.ToString(), "application/vnd.docker.distribution.manifest.v2+json" },
-                    },
+                    new KeyValuePair<string, string>(HttpRequestHeader.Authorization.ToString(), $"Bearer {autorizationResponse.token}"),
+                    new KeyValuePair<string, string>(HttpRequestHeader.Accept.ToString(), "application/vnd.docker.distribution.manifest.v2+json"),
                 };
-
-                HttpResponseMessage response = await App.httpClient.SendRequestAsync(httpRequestMessage).AsTask(tokenSource.Token, progressCallback);
-
-                StorageFolder downloadFolder = await StorageFolder.GetFolderFromPathAsync(tmpDirectory);
-                StorageFile downloadFile = await downloadFolder.CreateFileAsync(layerName);
-
-                IInputStream inputStream = await response.Content.ReadAsInputStreamAsync();
-                IOutputStream outputStream = await downloadFile.OpenAsync(FileAccessMode.ReadWrite);
-                await RandomAccessStream.CopyAndCloseAsync(inputStream, outputStream);
-
-                
-                inputStream.Dispose();
-                outputStream.Dispose();
+                await platformHelpers.DownloadFileAsync(new Uri($"https://{registry}/v2/{repository}/blobs/{layer}"), headers, 
+                    new FileInfo(Path.Combine(tmpDirectory, layerName)));
             }
         }
 
         public async Task CombineLayers()
         {
-            var installTarPath = Path.Combine(App.tmpDirectory.Path, "install.tar.bz");
+            var installTarPath = Path.Combine(tmpDirectory, "install.tar.bz");
 
             if (layersPaths.Count == 1)
             {
-                await helpers.CopyFileAsync(layersPaths[0], installTarPath);
+                await platformHelpers.CopyFileAsync(layersPaths[0], installTarPath);
             }
             else
             {
@@ -166,7 +157,7 @@ namespace easyWSL
                     concatTarCommand += $" @{layerPath}";
                 }
                 Trace.WriteLine(concatTarCommand);
-                await helpers.ExecuteProcessAsynch(Path.Combine(App.executableLocation, @"dep\bsdtar.exe"), concatTarCommand);
+                await helpers.ExecuteProcessAsynch(platformHelpers.TarCommand, concatTarCommand);
                 Trace.WriteLine("combining completed");
             }
         }
