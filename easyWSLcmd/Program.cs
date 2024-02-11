@@ -42,7 +42,7 @@ import.SetHandler(async (name, image, output) =>
     Console.WriteLine("Combining layers");
     await downloader.CombineLayers();
     Console.WriteLine("Registering distro");
-    Process.Start("wsl.exe", new[] { $"--import", name, output.FullName, Path.Combine(tempPath, "install.tar.bz") });
+    Process.Start("wsl.exe", new[] { $"--import", name, output.FullName, Path.Combine(tempPath, "install.tar.bz") }).WaitForExit();
 }, distroName, imageName, outputPath);
 
 return await rootCommand.InvokeAsync(args);
