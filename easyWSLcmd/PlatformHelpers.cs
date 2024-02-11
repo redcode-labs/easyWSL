@@ -28,8 +28,14 @@ namespace easyWslCmd
                 httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
             }
 
-            await using var inStream = await httpClient.GetStreamAsync(uri);
-            Copy(inStream, destinationPath);
+            try
+            {
+                await using var inStream = await httpClient.GetStreamAsync(uri);
+                Copy(inStream, destinationPath);
+            }
+            catch (System.Net.Http.HttpRequestException e)
+            {
+            }
         }
 
         public string TarCommand => "tar.exe";
