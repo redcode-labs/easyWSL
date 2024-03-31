@@ -1,16 +1,13 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Streams;
 
-namespace easyWSL
+namespace easyWslLib
 {
-    class Helpers
+    public class Helpers
     {
         public string GetRequest(string url)
         {
@@ -59,22 +56,6 @@ namespace easyWSL
                 }
                 return builder.ToString();
             }
-        }
-        public async Task CopyFileAsync(string sourcePath, string destinationPath)
-        {
-            string destinationFolderPath = sourcePath.Substring(0, sourcePath.LastIndexOf(@"\"));
-            string destinationFileName = Path.GetFileName(destinationPath);
-
-            StorageFile sourceFile = await StorageFile.GetFileFromPathAsync(sourcePath);
-            StorageFolder destinationFolder = await StorageFolder.GetFolderFromPathAsync(destinationFolderPath);
-            StorageFile destinationFile = await destinationFolder.CreateFileAsync(destinationFileName);
-
-            IInputStream inputStream = await sourceFile.OpenAsync(FileAccessMode.Read);
-            IOutputStream outputStream = await destinationFile.OpenAsync(FileAccessMode.ReadWrite);
-
-            await RandomAccessStream.CopyAndCloseAsync(inputStream, outputStream); 
-            inputStream.Dispose();
-            outputStream.Dispose();
         }
         public async Task ExecuteProcessAsynch(string exe, string arguments)
         {

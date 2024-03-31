@@ -8,6 +8,7 @@ using Windows.Storage.Pickers;
 using WinRT;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using easyWslLib;
 
 namespace easyWSL
 {
@@ -17,7 +18,6 @@ namespace easyWSL
         private string distroTarballPath;
         private string distroSource;
         private Helpers helpers = new();
-        private DockerDownloader dockerDownloader = new();
         private Windows.Storage.StorageFolder storageDirectory = Windows.Storage.ApplicationData.Current.LocalFolder;
 
         private Dictionary<string, string> distrosSources = new()
@@ -76,6 +76,10 @@ namespace easyWSL
         }
         private async void registerDistroProceedButton_Click(object sender, RoutedEventArgs e)
         {
+            DockerDownloader dockerDownloader = new(App.tmpDirectory.Path,
+                new PlatformHelpers(Path.Combine(App.executableLocation, "dep", "bsdtar.exe"), HttpProgressCallback));
+
+
             string image;
             var distroName = distroNameTextBox.Text;
             string userName = "";
@@ -125,7 +129,7 @@ namespace easyWSL
 
                     try
                     {
-                        await dockerDownloader.DownloadImage(image, HttpProgressCallback);
+                        await dockerDownloader.DownloadImage(image);
                     }
                     catch (DockerDownloader.DockerException)
                     {
@@ -150,7 +154,7 @@ namespace easyWSL
 
                     try
                     {
-                        await dockerDownloader.DownloadImage(image, HttpProgressCallback);
+                        await dockerDownloader.DownloadImage(image);
                     }
                     catch (DockerDownloader.DockerException)
                     {
